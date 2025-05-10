@@ -1,0 +1,24 @@
+.title{
+    float: left;
+}
+body {
+    background-color: lightgoldenrodyellow;
+  }
+  
+  h1 {
+    color: darkslategray;
+    padding: 10px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+  }
+  
+  p {
+    font-family: verdana;
+    font-size: 20px;
+  }
+  .back{
+    float: inline-end;
+  }
+    .text{
+    font-family: verdana;
+    font-size: 20px;
+  }
