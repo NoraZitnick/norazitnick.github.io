@@ -14,8 +14,17 @@ body {
     font-size: 20px;
   }
   .text{
+    text-decoration: none;
     font-family: verdana;
     font-size: 20px;
+  }
+  a:visited{
+    color: darkblue;
+    text-decoration: none;
+  }
+  a{
+    color: darkblue;
+    text-decoration: none;
   }
   .box {
   border: 5px solid green;
