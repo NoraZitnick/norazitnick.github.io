@@ -14,8 +14,305 @@
 
 <h1 class = "title">An Airport</h1>
 <p class = "back text"><a href="index.html">Back</a></p>
-<!-- <div class="box clearfix"><img class = "image" src="IMG_1664.JPG" alt="ME!" style="width:489px;height:326px;">
-  <p><b>Nora</b> is on the frc robotics team 5026. She is the programming lead on the world champion team and has contributed greatly to their code. And now she does not know what more to write for her bio. oof.</p>
-    </div> -->
+<h2 class = "text"><br><br><br><br><br>Summary</h2>
+<p class = "text">Our program books a plane. You encounter a storm and holiday prices, along with 
+  bad Boeing planes.
+</p>
+<div class="box clearfix"><img class = "image" src="UMLDiagram.png" alt="ME!" style="width:40%;"></div>
+<p><a href="https://docs.google.com/document/d/13lNbp9-15Qc_KXyyO_62MfuzMHjLvX63Q36daUneDko/edit?usp=sharing">Code</a></p>
+<p><b>Airport:</b>The Airport class controls the planes. The Airport class has an ArrayList of arriving 
+  planes and an Array of departing planes because only a certain number of planes can depart at once. 
+  It has start and end holiday season methods to double the price of the planes and make a storm happen. 
+  When a storm happens, there is a 50% chance that each plane will be delayed. 
+  <br><b>AirportDriver:</b> The AirportDriver class asks you what airport you are at and tells you the 
+  planes. These planes are pre-set but their destination or starting point changes based on the answer. 
+  Then it asks you what plane you want to book and sees if there are available seats on that plane and 
+  if there are, it books one seat. Otherwise, it tells you there were no results found and asks you your 
+  destination and seats again until you select one that works. 
+  <br><b>Plane Abstract Class:</b>Each individual plane has an airline and has business and economy seats with prices. 
+  They can be delayed or not delayed, and they have a starting location and a destination. 
+  <br><b>BoeingPlane Interface:</b> Contains a gotToDestination method because all boeing planes may not arrive in 
+  one peice
+  <br><b>AirbusA320:</b> A plane
+  <br><b>AntonovAn225:</b> A plane
+  <br><b>EmbraerEJet:</b> A plane
+  <br><b>Boeing737:</b> A boeing plane
+  <br><b>Boeing747:</b> A boeing plane
+  <br><b>Boeing777:</b> A boeing plane
+</p>
+<h2 class = "text">Output 1: </h2>
+<p class = "text">
+<br>What is the Airport's name?
+<br>SFO
+<br>Where is the Airport located?
+<br>San Fransisco
+<br>
+<br>Welcome to the SFO airport! 
+<br>
+<br>Arriving Planes: 
+<br>United Airlines 
+<br>Flight from AFK to SFO
+<br>68 seats available      $456.0
+<br>266 seats available     $263.0
+<br>Status: DELAYED
+<br>Reason: Putting out a cockpit fire
+<br>
+<br>SouthWest Airlines 
+<br>Flight from LOL to SFO
+<br>8 seats available       $623.0
+<br>88 seats available      $382.0
+<br>Status: ON TIME
+<br>
+<br>American Airlines 
+<br>Flight from FYI to SFO
+<br>30 seats available      $389.0
+<br>170 seats available     $102.0
+<br>Status: DELAYED
+<br>Reason: Tightening bolts
+<br>
+<br>Alaskan Airlines 
+<br>Flight from TMI to SFO
+<br>88 seats available      $700.0
+<br>276 seats available     $590.0
+<br>Status: DELAYED
+<br>Reason: Putting the door back on
+<br>
+<br>
+<br>Departing Planes: 
+<br>United Airlines 
+<br>Flight from SFO to SMH
+<br>30 seats available      $456.0
+<br>170 seats available     $263.0
+<br>Status: DELAYED
+<br>Reason: Tightening bolts
+<br>
+<br>SouthWest Airlines 
+<br>Flight from SFO to IRL
+<br>100 seats available     $100.0
+<br>15000 seats available   $7.0
+<br>Status: DELAYED
+<br>Reason: Cleaning out the dead bodies
+<br>
+<br>American Airlines 
+<br>Flight from SFO to NGL
+<br>88 seats available      $389.0
+<br>276 seats available     $102.0
+<br>Status: DELAYED
+<br>Reason: Putting the door back on
+<br>
+<br>Alaskan Airlines 
+<br>Flight from SFO to TBA
+<br>12 seats available      $700.0
+<br>138 seats available     $590.0
+<br>Status: ON TIME
+<br>
+<br>
+<br>Where do you want to go?
+<br>TBA
+<br>These are the planes now:  
+<br>
+<br>Arriving Planes: 
+<br>United Airlines 
+<br>Flight from AFK to SFO
+<br>68 seats available      $456.0
+<br>266 seats available     $263.0
+<br>Status: ON TIME
+<br>
+<br>SouthWest Airlines 
+<br>Flight from LOL to SFO
+<br>8 seats available       $623.0
+<br>88 seats available      $382.0
+<br>Status: ON TIME
+<br>
+<br>American Airlines 
+<br>Flight from FYI to SFO
+<br>30 seats available      $389.0
+<br>170 seats available     $102.0
+<br>Status: ON TIME
+<br>
+<br>Alaskan Airlines 
+<br>Flight from TMI to SFO
+<br>88 seats available      $700.0
+<br>276 seats available     $590.0
+<br>Status: DELAYED
+<br>Reason: Putting the door back on
+<br>
+<br>
+<br>Departing Planes: 
+<br>United Airlines 
+<br>Flight from SFO to SMH
+<br>30 seats available      $456.0
+<br>170 seats available     $263.0
+<br>Status: ON TIME
+<br>
+<br>SouthWest Airlines 
+<br>Flight from SFO to IRL
+<br>100 seats available     $200.0
+<br>15000 seats available   $14.0
+<br>Status: DELAYED
+<br>Reason: Cleaning out the dead bodies
+<br>
+<br>American Airlines 
+<br>Flight from SFO to NGL
+<br> seats available      $778.0
+<br>276 seats available     $204.0
+<br>Status: ON TIME
+<br>
+<br> Airlines 
+<br>Flight from SFO to TBA
+<br>12 seats available      $1400.0
+<br>138 seats available     $1180.0
+<br>Status: DELAYED
+<br>Reason: Crashed into gate
+<br>
+<br>
+<br>You are too late! It is now Holiday Season and prices have increased!
+<br>Also a storm struck and some flights are delayed. Sorry for the inconvenience.
+<br>Where do you want to go?
+<br>TBA
+<br>Do you want to go on Buisness [true] or Economy class [false]?
+<br>false
+<br>Economy seat booked on flight Alaskan from SFO to TBA
+<br>Have a nice flight!
+</p>
+<h2 class = "text">Output 2: </h2>
+<p class = "text">
+<br>What is the Airport's name?
+<br>ALA
+<br>Where is the Airport located?
+<br>Alabama
+<br>
+<br>Welcome to the ALA airport! 
+<br>
+<br>Arriving Planes: 
+<br>United Airlines 
+<br>Flight from AFK to ALA
+<br>68 seats available      $456.0
+<br>266 seats available     $263.0
+<br>Status: DELAYED
+<br>Reason: Putting out a cockpit fire
+<br>
+<br>SouthWest Airlines 
+<br>Flight from LOL to ALA
+<br>8 seats available       $623.0
+<br>88 seats available      $382.0
+<br>Status: ON TIME
+<br>
+<br>American Airlines 
+<br>Flight from FYI to ALA
+<br>30 seats available      $389.0
+<br>170 seats available     $102.0
+<br>Status: DELAYED
+<br>Reason: Tightening bolts
+<br>
+<br>Alaskan Airlines 
+<br>Flight from TMI to ALA
+<br>88 seats available      $700.0
+<br>276 seats available     $590.0
+<br>Status: DELAYED
+<br>Reason: Putting the door back on
+<br>
+<br>
+<br>Departing Planes: 
+<br>United Airlines 
+<br>Flight from ALA to SMH
+<br>30 seats available      $456.0
+<br>170 seats available     $263.0
+<br>Status: DELAYED
+<br>Reason: Tightening bolts
+<br>
+<br>SouthWest Airlines 
+<br>Flight from ALA to IRL
+<br>100 seats available     $100.0
+<br>15000 seats available   $7.0
+<br>Status: DELAYED
+<br>Reason: Cleaning out the dead bodies
+<br>
+<br>American Airlines 
+<br>Flight from ALA to NGL
+<br>88 seats available      $389.0
+<br>276 seats available     $102.0
+<br>Status: DELAYED
+<br>Reason: Putting the door back on
+<br>
+<br>Alaskan Airlines 
+<br>Flight from ALA to TBA
+<br>12 seats available      $700.0
+<br>138 seats available     $590.0
+<br>Status: ON TIME
+<br>
+<br>
+<br>Where do you want to go?
+<br>SMH
+<br>These are the planes now:  
+<br>
+<br>Arriving Planes: 
+<br>United Airlines 
+<br>Flight from AFK to ALA
+<br>68 seats available      $456.0
+<br>266 seats available     $263.0
+<br>Status: DELAYED
+<br>Reason: Putting out a cockpit fire
+<br>
+<br>SouthWest Airlines 
+<br>Flight from LOL to ALA
+<br>8 seats available       $623.0
+<br>88 seats available      $382.0
+<br>Status: ON TIME
+<br>
+<br>American Airlines 
+<br>Flight from FYI to ALA
+<br>30 seats available      $389.0
+<br>170 seats available     $102.0
+<br>Status: DELAYED
+<br>Reason: Tightening bolts
+<br>
+<br>Alaskan Airlines 
+<br>Flight from TMI to ALA
+<br>88 seats available      $700.0
+<br>276 seats available     $590.0
+<br>Status: ON TIME
+<br>
+<br>
+<br>Departing Planes: 
+<br>United Airlines 
+<br>Flight from ALA to SMH
+<br>30 seats available      $456.0
+<br>170 seats available     $263.0
+<br>Status: ON TIME
+<br>
+<br>SouthWest Airlines 
+<br>Flight from ALA to IRL
+<br>100 seats available     $200.0
+<br>15000 seats available   $14.0
+<br>Status: DELAYED
+<br>Reason: Cleaning out the dead bodies
+<br>
+<br>American Airlines 
+<br>Flight from ALA to NGL
+<br>88 seats available      $778.0
+<br>276 seats available     $204.0
+<br>Status: DELAYED
+<br>Reason: Putting the door back on
+<br>
+<br>Alaskan Airlines 
+<br>Flight from ALA to TBA
+<br>12 seats available      $1400.0
+<br>138 seats available     $1180.0
+<br>Status: DELAYED
+<br>Reason: Crashed into gate
+<br>
+<br>
+<br>You are too late! It is now Holiday Season and prices have increased!
+<br>Also a storm struck and some flights are delayed. Sorry for the inconvenience.
+<br>Where do you want to go?
+<br>SMH
+<br>Do you want to go on Buisness [true] or Economy class [false]?
+<br>false
+<br>Economy seat booked on flight United from ALA to SMH
+<br>Have a nice flight!
+<br>Did you get to your location on that boeing plane? No
+
+</p>
 </body>
 </html>
