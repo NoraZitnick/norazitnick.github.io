@@ -1,0 +1,319 @@
+<html>
+<head>
+    <!-- <meta http-equiv="Access-Control-Allow-Origin" content="*" /> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="purwatt.css">
+    
+    <!-- apple homepage icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <!-- title bar icon -->
+  <link rel="icon"
+    href="https://cdn.discordapp.com/attachments/1006626489099358228/1105272944197894154/purrwatt_sun.png"
+    type="image/x-icon">
+
+    
+  <title>Purrwatt | Save up to 34% more big bucks on electricity</title>
+
+
+</head>
+
+
+<!---->
+
+
+<body>
+    <div class="sticky-header">
+        <h2 style="text-align: center; flex-grow: 1;">Purrwatt</h2>
+        
+        <a href="/purrwatt/graphs/"> <!-- goes back to the homepage -->
+            <div class="button" style="position: absolute; right: 10; background-image: url(line-graph.png); height: 20px; width: 20px; background-size: cover;"></div>
+        </a>
+    </div>
+    <div style="height: 10px;"></div> <!-- idk its just a divider -->
+    
+    <!--<p class="muted" style="margin-left: 20px; margin-bottom: 30px;">Projection data last updated <span id="currentTime"></span></p>-->
+    <h2>Recommended Time</h2>
+    <div class="section" id="">
+            <!-- peak time warning -->
+            <div id="peakMessage" class="hidden">
+                <div class="warning-icon"></div>
+                <p class="yellow-text" style="padding-top: 7px;">
+                    You are currently in a peak usage time.
+                </p>  
+                <hr style="margin-top: 20px;">
+            </div>
+            
+            
+            <!-- recommened time reminder button -->
+            <div style="display: flex; justify-content: space-between; padding-top: 20px;">
+                <p class="green-text" style="margin-bottom: 5px; margin-top: -2px;" id="recommendedtime">--</p>
+                <div class="blue-button button" style="margin-top: -10px; height: min-content;" id="reminderbutton" >--</div> <!-- recommended time -->
+            </div>
+    
+    </div>
+    
+    
+    
+    <div id="time-options"> <!-- time sections go in here -->
+        <p>loading data...</p>
+    </div>
+
+
+
+
+
+<script>
+
+
+function showInfo(idName) {
+    document.getElementById(idName).classList.toggle("hidden");
+}
+
+
+
+
+const fileUrl = 'https://norazitnick.github.io/purrwatt/data.csv';
+
+const xhr = new XMLHttpRequest();
+var flowers = [];
+
+function createflowers(series) {
+    const arr = Object.values(series[5]);
+    console.log(arr);
+    for (let i = 0; i < 2000; i += 12) {
+        const subArr = arr.slice(i+1, i+21);
+        const sum = subArr.reduce((accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue));
+        console.log(sum);
+        if (sum < 5000*12) {
+            flowers.push(3)
+            console.log("three flowers");
+        } else if (sum < 12500*12) {
+            flowers.push(2)
+            console.log("two flowers");
+        } else if (sum < 20000*12) {
+            flowers.push(1)
+            console.log("one leaf");
+        } else {
+            flowers.push(0)
+            console.log("no flowers");
+        }
+    }
+    console.log("END DATA:");
+    console.log(flowers);
+}
+
+
+xhr.onreadystatechange = function() {
+  if (this.readyState === 4 && this.status === 200) {
+    const csvData = xhr.responseText;
+    // Split the CSV data into rows using the newline character
+    const rows = csvData.split('\n');
+    // Initialize an empty array to hold the series data
+    const series = [];
+    // Loop through each row of data
+    for (let i = 0; i < rows.length; i++) {
+      // Split the row into an array using the comma separator
+      const row = rows[i].split(',');
+      // If this is the first row, use it to create an array of headers
+      if (i === 0) {
+        var headers = row;
+      } else {
+        // Otherwise, create an object with each header as a key and the corresponding value from the row as the value
+        const obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = row[j];
+        }
+        // Add the object to the series array
+        series.push(obj);
+      }
+    }
+    // Log the series array to the console
+    // console.log(series);
+    createflowers(series);
+
+    // --- All code that depends on the loaded data goes here ---
+    const d = new Date();
+    var hour = d.getHours();
+    const hoursTotal = flowers.length;
+    const flowersTomorrow = [];
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    flowers = flowers.slice(hour);
+    console.log(flowers)
+    const flowersDay = [];
+    for (let i = 0; i < flowers.length; i++) {
+        let x = hour + i;
+        x = (x - x%24) / 24 + 1;
+        flowersDay[i] = x;
+    }
+    const daysTotal = flowersDay[flowersDay.length - 1];
+    var timeSections = [];
+    var icons = [];
+    var previousFlowers;
+    var previousDay;
+    for (let i = 0; i < hoursTotal; i++ ) {
+        if (flowers[i] != previousFlowers || flowersDay[i] != previousDay) {
+            timeSections[timeSections.length] = hour + i;
+        }
+        previousFlowers = flowers[i];
+        previousDay = flowersDay[i];
+    };
+    for (let i = 0; i < timeSections.length; i++) {
+        let x = timeSections[i];
+        let y = x - hour;
+        var color;
+        let place = icons.length;
+        icons[place] = "";
+        let placeFlower = flowers[y];
+        if (flowers[y] > 0){
+            for (let h = 0; h < 3 - placeFlower; h++) {
+                icons[place] = icons[place] + '<div class="flower-icon blank-flower"></div>'
+            }
+            for (let h = 0; h < placeFlower; h++) {
+                icons[place] = icons[place] +'<div class="flower-icon"></div>'
+            }
+        } else {
+            icons[place] = '<div class="flower-icon blank"></div><div class="flower-icon blank"></div><div class="warning-icon"></div>'
+        }
+    }
+    var code = "";
+    var sectionCode = '<h2>Other times</h2><div class="section">';
+    var sectionName = "Other Times";
+    var dayCode = [];
+    for (let i = 0; i < timeSections.length; i++) {
+        let currentFlowers = flowers[timeSections[i] - hour];
+        if (!(isNaN(currentFlowers))) {
+            let codeCurrent = "";
+            let start = timeSections[i]
+                    timeSections[timeSections.length] = timeSections[timeSections.length - 1] + 1;
+            let end = timeSections[i + 1];
+                    timeSections.splice(timeSections.length - 1, 1);
+            let color;
+            console.log(currentFlowers)
+            if (currentFlowers == 0 || findPrice(start) == "$$$") {
+                color = "yellow";
+            } else if (currentFlowers == 3) {
+                color = "green";
+            } else {
+                color = "green-yellow";
+            }
+            let sectionLength = end - start;
+            let id = start + "-" + end;
+            var lengthText;
+            if (sectionLength > 1) {
+               lengthText = find12hr(start) + " - " + find12hr(end);
+            } else {
+                lengthText = find12hr(start);
+            }
+            var arrowCode = "";
+            if (sectionLength > 1) {
+                arrowCode = '<div class="collapseArrow arrow-' + color + '"></div>'
+            } else {
+                arrowCode = '<div class="collapseArrow invisible arrow-' + color + '"></div>'
+            }
+            var dollarSigns = '<p style="margin-left: auto; margin-right: 30px;" class="' + color +'-text">' + findPrice(start) + '</p>';
+            let innerCode = "";
+            innerCode = '<div id="' + id + '" class="hidden ' + color + '-text">'
+            if (findPrice(start) == "$$$") {
+                innerCode = innerCode + '<p class="yellow-text muted">This is a peak usage time. Avoid excess energy use if possible.</p>';
+            } else if (currentFlowers == 0) {
+                innerCode = innerCode + '<p class="yellow-text muted">This is a low clean energy time. Avoid excess energy use if possible.</p>'
+            }
+            let singleSectionLink = ["", ""];
+            if (!(sectionLength == 1)) {
+                for (x = 0; x < sectionLength; x++){
+                    let y = start + x
+                    innerCode = innerCode + '<hr>\
+                    <a href="reminders.html?time=' + (y - hour) +'">\
+                        <div class="time-section-inner">\
+                        <div class="box-text-indent"></div><p class="' + color + '-text">' + find12hr(y) + '</p> \
+                        <p class="' + color + '-text muted" style="margin-left: auto;">' + findPrice(y) + '</p>\
+                        </div></a>';
+                }
+            } else {
+                singleSectionLink[0] = '<a href="reminders.html?time=' + (start - hour) +'">';
+                singleSectionLink[1] = '</a>';
+            }
+            innerCode = innerCode + '</div>';
+            codeCurrent = singleSectionLink[0] + '<div class="' + color + '-background time-section-box">\
+                <div onclick="showInfo(\'' + id +'\')" class="time-section-inner">' + icons[i] + '\
+                    <p class="' + color + '-text">' + lengthText + '</p>' + dollarSigns + arrowCode + '</div>'
+                    + innerCode + '</div>' + singleSectionLink[1];
+            sectionCode = sectionCode + codeCurrent;
+            let h = (find12hr(end));
+            if (h == "12 am") {
+                sectionCode = sectionCode + '</div><h2>' + days[(d.getDay() + flowersDay[start] - 1)%7 ] + '</h2><div class="section">';
+            }
+        }
+    }
+    sectionCode = sectionCode + "</div>"
+    document.getElementById("time-options").innerHTML = sectionCode;
+    if (flowers[0] == 0) {
+        document.getElementById("peakMessage").classList.remove("hidden");
+    }
+    let recommended = "";
+    let i = 0;
+    while (recommended == "") {
+        if (flowers[i] == 3) {
+            recommended = i;
+        }
+        i++;
+    }
+    document.getElementById("reminderbutton").innerHTML = '<a href="reminders.html?time=' + recommended +'">Remind me</a>';
+    document.getElementById("recommendedtime").innerHTML = "Recommended time: " + find12hr(recommended + hour);
+    var minutes = d.getMinutes() + "";
+    if (minutes.length == 1) {
+        minutes = "0" + minutes;
+    }
+    var timeText = hour%12 + ":" + minutes + "" + (find12hr(hour)).slice(-2)
+    // document.getElementById("header").innerHTML = hour%12 + ":" + minutes + " " + (find12hr(hour)).slice(-2);
+    // document.getElementById("currentTime").innerHTML = timeText
+  }
+};
+
+// Open a GET request to the file URL
+xhr.open('GET', fileUrl, true);
+// Send the request
+xhr.send();
+console.log("chicken nugget");
+console.log(xhr.responseText.length);
+
+
+
+    function findPrice(t) { // finds the dollar signs of a certain time
+        let cost;
+        if (t%24 >= 16 && t%24 <= 21) {
+            cost = "$$$"
+        } else {
+            cost = "  $"
+        }
+        return cost;
+    }
+
+
+    function find12hr(t) { // converts 24 hr time into 12 hr time
+        t = t%24;
+        let output = t%12;
+        let meridiem;
+        let opposite;
+        if (t > 12 || t == 0) {
+            meridiem = " pm";
+            opposite = " am";
+        } else {
+            meridiem = " am";
+            opposite = " pm";
+        }
+        if (output == 0) {
+            output = 12;
+            meridiem = opposite;
+        }
+        return output + meridiem
+     }
+
+
+</script>
+    
+</body>
+
+</html>
