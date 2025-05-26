@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="purwatt.css">
+  <link rel="icon"
+    href="https://cdn.discordapp.com/attachments/1006626489099358228/1105272944197894154/purrwatt_sun.png"
+    type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Purrwatt | Graphs</title>
+</head>
+<body>
+    <div class="sticky-header">
+        <a href="/purrwatt"> <!-- goes back to the homepage -->
+            <div class="button" style="position: absolute;">< Back</div>
+        </a>
+        <div style="flex-grow: 1;"><h2 style="text-align: center;">Energy graphs</h2>
+        <p class="muted"></p></div>
+    </div>
+    <div class="section section-padding">
+        <p>Today's energy distribution</p>
+        <canvas id="myChart"></canvas>
+    </div>
+    <div class="section">
+        <p>Week demand prediction</p>
+        <canvas id="SupplyChart"></canvas>
+    </div>
+    <div class="section">
+        <p>Data from Caliso, updated 5/6/2023 3:45pm</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

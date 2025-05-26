@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="purwatt.css">
+    <link rel="icon"
+    href="https://cdn.discordapp.com/attachments/1006626489099358228/1105272944197894154/purrwatt_sun.png"
+    type="image/x-icon">
+
+    
+  <title>Purrwatt | Reminders</title>
+</head>
+
+<body>
+    
+    
+    <div class="sticky-header">
+        <a href="/purrwatt"> <!-- goes back to the homepage -->
+            <div class="button" style="position: absolute; color: rgb(15, 95, 254)"><b><</b></div>
+        </a>
+        <h2 style="text-align: center; flex-grow: 1;">Energy use at <span id="time"></span> (in <span id="hoursfromnow"></span> hours)</h2>
+    </div>
+    
+    <!-- Display the information on the page -->
+    <!--<p>Time: <span id="time"></span></p>-->
+
+    
+    <div class="section" style="">
+        <div style="max-width: 100%;" class="meter-container">
+            <div class="meter-inner green-background">
+                <p class="meter-inner-text">36¢</p>
+            </div>
+            <div class="meter-inner yellow-background"></div>
+            <div class="meter-inner red-background">
+                <p class="meter-inner-text" style="text-align: right;">42¢</p>
+            </div>
+        </div>
+                    <span id="triangle-one"></span>
+        <p>Energy cost: <span id="price"></span> per kilowatt hour</p>
+
+        <hr style="">
+
+        <div style="max-width: 100%; " class="meter-container">
+            <div class="meter-inner green-background" style="display: flex;">
+                <div class="flower-icon meter-inner-flowers"></div><div class="flower-icon meter-inner-flowers"></div><div class="flower-icon meter-inner-flowers" style="margin-bottom: -3px;"></div>
+            </div>
+                <div class="meter-inner green-yellow-background"></div>
+                <div class="meter-inner yellow-background"></div>
+            <div class="meter-inner red-background" style="display: flex;">
+                <div class="meter-inner-flowers flower-icon blank-flower" style="margin-left: auto;"></div>
+            </div>
+        </div>
+            <span id="triangle-two"></span>
+        <div style="display: flex;"><p>Energy cleanliness:</p> <div style="display: flex;" id="icons">
+        </div></div>
+        <p class="muted">More sunflowers means that less dirty energy is used at this time </p>
+    </div>
+
+    <h2>Rewards</h2>
+<div class="section">
+        <!--sometime lets make a new class instead of reusing top box-->
+        
+        <br>
+        <select id="mySelect" onchange="handleSelection()" class="button">
+            <!-- Define options for the dropdown menu -->
+        </select>
+        <div id="rewards-section" class="hidden">
+            <hr>
+            <!-- <p id="myOutput"></p> -->
+            <p id="estimatedSavings"></p>
+            <!-- <p id="myOutput"> -->
+            <div id = "icons" style="display: flex;"></div>
+        </div>
+    </div>
+
+    <div style="width: 100%;">
+        <div class="section sectionPadding button" onclick="togglePopUp('reminder')">
+            <p>Set Reminder</p>
+        </div>
+
+        <div class="section sectionPadding button" onclick="addRewards(), togglePopUp()">
+            <p>Use delay start</p>
+        </div>
+    </div>
+
+
+    <!-- pop up start -->
+    <div class="cover-box hidden" id="pop-up">
+        <div class="cover-box-inner">
+            <div id="pop-up-text">
+            </div>
+    
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; width: 100%;">
+                <div class="cover-box-button button" onclick="togglePopUp()"  id="pop-up-cancel">
+                    <p>Cancel</p>
+                </div>
+                <div style="border-width: 0px 2px 0px 0px ; border-color: darkslategrey; border-style: solid; border-radius: 291234810239px; height: auto; margin: 20px;margin-top: 10px; margin-bottom: 10px;" id="pop-up-cancel2"></div> <!-- divider -->
+                <a style="flex-grow: 1;" href = "/purrwatt" id="pop-up-ok">
+                <div class="cover-box-button button" onclick="togglePopUp();">
+                    <p style="font-weight: bold">OK</p>
+                    
+                
+                </div></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- pop up end -->
+      
+      
+<!-- SCRIPT_____________________________________________ -->
+    <script>
+
+const fileUrl = 'data.csv';
+
+const xhr = new XMLHttpRequest();
+var flowers = [];
+
+function createflowers(series) {
+    const arr = Object.values(series[5]);
+    console.log(arr);
+    for (let i = 0; i < 2000; i += 12) {
+        const subArr = arr.slice(i+1, i+21);
+        const sum = subArr.reduce((accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue));
+        console.log(sum);
+        if (sum < 5000*12) {
+            flowers.push(3)
+            console.log("three flowers");
+        } else if (sum < 12500*12) {
+            flowers.push(2)
+            console.log("two flowers");
+        } else if (sum < 20000*12) {
+            flowers.push(1)
+            console.log("one leaf");
+        } else {
+            flowers.push(0)
+            console.log("no flowers");
+        }
+    }
+    console.log("END DATA:");
+    console.log(flowers);
+}
+
+
+xhr.onreadystatechange = function() {
+  if (this.readyState === 4 && this.status === 200) {
+    const csvData = xhr.responseText;
+    const rows = csvData.split('\n');
+    const series = [];
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i].split(',');
+      if (i === 0) {
+        var headers = row;
+      } else {
+        const obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = row[j];
+        }
+        series.push(obj);
+      }
+    }
+    createflowers(series);
+    
+  }
+};
+
+xhr.open('GET', fileUrl, false);
+xhr.send();
+console.log("chicken nugget");
+console.log(xhr.responseText.length);
+
+    const d = new Date();
+    var hour = d.getHours()
+    flowers = flowers.slice(hour);
+    console.log(flowers)
+
+function find12hr(t) { // converts 24 hr time into 12 hr time
+        t = t%24;
+        let output = t%12;
+        let meridiem;
+        let opposite;
+        if (t > 12 || t == 0) {
+            meridiem = " pm";
+            opposite = " am";
+        } else {
+            meridiem = " am";
+            opposite = " pm";
+        }
+        if (output == 0) {
+            output = 12;
+            meridiem = opposite;
+        }
+        return output + meridiem
+     }
+
+
+
+var energyCostNow = 14;
+    var energyCostNormal = 20;
+    var pageFlowers = 1;
+
+
+    var appliances = ["Car 25%", "Car 50%", "Car 75%", "Dishwasher", "Clothes dryer", "Clothes washer"]
+    var applianceEnergyUse = [2.5, 5, 7.5, 1.5, 3.3, 0.4];
+
+    var options = '<option value="--">Select an Appliance</option>'; // generate options
+    for (let i = 0; i < appliances.length; i++){
+        let savings = applianceEnergyUse[i]*20 
+        options = options + '<option value="' + applianceEnergyUse[i] + '">' + appliances[i] + '</option>';
+    }
+
+    document.getElementById("mySelect").innerHTML = options;
+
+    var flowerCode = "";
+    for (let i = 0; i < 3 - pageFlowers; i++) {
+        flowerCode = flowerCode + '<div class="flower-icon blank-flower"></div>';
+    }
+    for (let i = 0; i < pageFlowers; i++) {
+        flowerCode = flowerCode + '<div class="flower-icon "></div>';
+    }
+    console.log(flowerCode);
+    document.getElementById("icons").innerHTML = flowerCode;
+
+
+    var popUpInner = "<p>Please select an appliance to run</p>";
+    var selectedValue;
+    var flowersSaved = 0;
+    var moneySaved = 0
+
+    function addRewards() { // adds rewards
+        if (!(isNaN(selectedValue))) { // only runs you actually selected an appliance
+            newMoney = Math.round(parseInt(selectedValue));
+            moneySaved = moneySaved + newMoney; // saves new amount of money in cents
+            flowersSaved = flowersSaved;
+        }
+    }
+    
+    
+    
+    
+        // Get the query parameters from the URL
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        const time = find12hr(parseInt(urlParams.get('time')) + parseInt(hour));
+        const rawTime = parseInt(urlParams.get('time')) + parseInt(hour)
+        const hoursfromnow = urlParams.get('time')
+        
+        
+    
+        // Display the information
+        const timeElement = document.getElementById('time');
+        timeElement.textContent = time;
+        const timeElement2 = document.getElementById('hoursfromnow');
+        timeElement2.textContent = hoursfromnow;
+        
+        
+        
+        
+        icons = "";
+        let placeFlower = flowers[hoursfromnow];
+        
+        if (flowers[hoursfromnow] == 1){ // if it has flowers
+            triangleIndented2 = '<div class="triangle" style="margin-left: 60%"></div>'
+            icons = icons + '<div class="flower-icon"></div>'
+        } else if (flowers[hoursfromnow] == 2){ 
+            triangleIndented2 = '<div class="triangle" style="margin-left: 35%"></div>'
+            icons = icons + '<div class="flower-icon"></div><div class="flower-icon"></div>'
+        } else if (flowers[hoursfromnow] == 3){ 
+            triangleIndented2 = '<div class="triangle" style="margin-left: 10%"></div>'
+            icons = icons + '<div class="flower-icon"></div><div class="flower-icon"></div><div class="flower-icon"></div>'
+        } else { // if it doesnt have flowers
+            triangleIndented2 = '<div class="triangle" style="margin-left: 85%"></div>'
+            icons = '<div class="warning-icon"></div>'
+        
+        }
+        
+        document.getElementById("icons").innerHTML = icons;
+        document.getElementById("triangle-two").innerHTML = triangleIndented2;
+        
+        
+    function findPrice(t) { // finds the dollar signs of a certain time
+        let cost;
+        if (t%24 >= 16 && t%24 <= 21) {
+            cost = "$$$"
+        } else {
+            cost = "$"
+        }
+        return cost;
+    }
+    
+    var price;
+    if (findPrice(rawTime) == "$$$") {
+        triangleIndented1 = '<div class="triangle" style="margin-left: 80%"></div>'
+        price = "42¢"
+    } else {
+        triangleIndented1 = '<div class="triangle" style="margin-left: 15%"></div>'
+        price = "36¢"
+    }
+    document.getElementById("price").innerHTML = price;
+    document.getElementById("triangle-one").innerHTML = triangleIndented1;
+    console.log(rawTime);
+    console.log(findPrice(rawTime));
+    
+    
+    function handleSelection() {
+        const selectElement = document.getElementById("mySelect");
+        selectedValue = selectElement.value;
+        const outputElement = document.getElementById("myOutput");
+        var multiplier;
+        if (findPrice(rawTime) == "$$$") {
+            triangleIndented1 = '<div class="triangle" style="margin-left: 80%"></div>'
+            multiplier = 0
+        } else {
+            triangleIndented1 = '<div class="triangle" style="margin-left: 15%"></div>'
+            multiplier = 6
+        }
+        document.getElementById("rewards-section").classList.remove("hidden")
+        let savings = selectedValue*multiplier/100
+        if ((savings+"").length == 3){
+            savings = savings + "0";
+        }
+        document.getElementById("estimatedSavings").innerHTML = "Estimated savings: $" + savings + "";
+        console.log(selectedValue)
+        console.log(price)
+    }
+    
+    function togglePopUp(action) {
+        var multiplier;
+        if (findPrice(rawTime) == "$$$") {
+            triangleIndented1 = '<div class="triangle" style="margin-left: 80%"></div>'
+            multiplier = 0
+        } else {
+            triangleIndented1 = '<div class="triangle" style="margin-left: 15%"></div>'
+            multiplier = 6
+        }
+        console.log(multiplier);
+        console.log(selectedValue)
+        
+        if (isNaN(selectedValue)) { // if there's no appliance selected 
+            popUpInner = "<p>Select an appliance</p>"
+            document.getElementById("pop-up-ok").classList.add("hidden") // hides the ok button and the middle divider
+            document.getElementById("pop-up-cancel2").classList.add("hidden")
+            
+            document.getElementById("pop-up-cancel").innerHTML = "<p>OK</p>"
+            
+        } else { // if an appliance is selected
+            if (action == "reminder") {
+                popUpInner = '<p>Your reminder has been set for<b> ' + time + '</b>.</p>'
+
+            } else {
+                popUpInner = '<p>You would have paid <b>' + selectedValue*multiplier + '¢</b> more if you had run your appliance at peak time.</p><br>\
+                <p>You have now saved <b> $16.40</b> in total.</p><br>\
+                <p>You earned <b>' + flowers[hoursfromnow] + ' sunflowers</b> for not running your appliance at peak time.</p><br>\
+                <p>You have earned <b>' + 98 + ' sunflowers</b> in total.</p><br>';
+            }
+            document.getElementById("pop-up-cancel").innerHTML = "<p>Cancel</p>"
+            document.getElementById("pop-up-ok").classList.remove("hidden") // shows the cancel button and middle divider
+            document.getElementById("pop-up-cancel2").classList.remove("hidden")
+
+        }
+        
+        document.getElementById("pop-up").classList.toggle("hidden");
+        document.getElementById("pop-up-text").innerHTML = popUpInner; // sets the pop-up text
+    }
+
+    </script>
+    
+</body>
