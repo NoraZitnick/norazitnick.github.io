@@ -18,6 +18,12 @@ body {
     font-family: verdana;
     font-size: 20px;
   }
+  .tinyText{
+    text-decoration: none;
+    font-family: verdana;
+    font-size: 10px;
+    line-height: 0.2;
+  }
   a:visited{
     color: darkblue;
     text-decoration: none;
