@@ -10,7 +10,7 @@
 
   <!-- title bar icon -->
   <link rel="icon"
-    href="https://cdn.discordapp.com/attachments/1006626489099358228/1105272944197894154/purrwatt_sun.png"
+    href="sun.png"
     type="image/x-icon">
 
     
@@ -74,16 +74,16 @@ function showInfo(idName) {
 
 
 
-const fileUrl = 'https://norazitnick.github.io/purrwatt/data.csv';
 
-const xhr = new XMLHttpRequest();
 var flowers = [];
 
 function createflowers(series) {
-    const arr = Object.values(series[5]);
-    console.log(arr);
+    const arr = Object.values(series[0]);
+    console.log(series);
     for (let i = 0; i < 2000; i += 12) {
         const subArr = arr.slice(i+1, i+21);
+        if (subArr.length === 0) continue;
+
         const sum = subArr.reduce((accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue));
         console.log(sum);
         if (sum < 5000*12) {
@@ -105,34 +105,63 @@ function createflowers(series) {
 }
 
 
-xhr.onreadystatechange = function() {
-  if (this.readyState === 4 && this.status === 200) {
-    const csvData = xhr.responseText;
+async function fetchAndGetCsvString() {
+    const url = 'https://caiso-proxy-repo.onrender.com/caiso-csv';
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network error');
+    const csvString = await response.text();
+
+    console.log('CSV string:', csvString);
+    
+    // You can now use csvString however you want (send to server, display, etc.)
+    return csvString;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+(async () => {
+  try {
+    const csvData = await fetchAndGetCsvString();
+    if (csvData && csvData.trim() !== '') {
+
     // Split the CSV data into rows using the newline character
     const rows = csvData.split('\n');
     // Initialize an empty array to hold the series data
     const series = [];
-    // Loop through each row of data
+
+    const obj = {};
     for (let i = 0; i < rows.length; i++) {
-      // Split the row into an array using the comma separator
-      const row = rows[i].split(',');
-      // If this is the first row, use it to create an array of headers
-      if (i === 0) {
-        var headers = row;
-      } else {
-        // Otherwise, create an object with each header as a key and the corresponding value from the row as the value
-        const obj = {};
-        for (let j = 0; j < headers.length; j++) {
-          obj[headers[j]] = row[j];
-        }
+        // Split the row into an array using the comma separator
+        const row = rows[i].split(',');
+        console.log(row);
+        obj[row[0]] = parseInt(row[4]) + parseInt(row[8]);
+        
         // Add the object to the series array
-        series.push(obj);
-      }
     }
+    series.push(obj);
+    // // Loop through each row of data
+    // for (let i = 0; i < rows.length; i++) {
+    //     // Split the row into an array using the comma separator
+    //     const row = rows[i].split(',');
+    //     // If this is the first row, use it to create an array of headers
+    //     if (i === 0) {
+    //     var headers = row;
+    //     } else {
+    //     // Otherwise, create an object with each header as a key and the corresponding value from the row as the value
+    //     const obj = {};
+    //     for (let j = 0; j < headers.length; j++) {
+    //         obj[headers[j]] = row[j];
+    //     }
+    //     // Add the object to the series array
+    //     series.push(obj);
+    //     }
+    // }
     // Log the series array to the console
     // console.log(series);
     createflowers(series);
-
+    
     // --- All code that depends on the loaded data goes here ---
     const d = new Date();
     var hour = d.getHours();
@@ -202,7 +231,7 @@ xhr.onreadystatechange = function() {
             let id = start + "-" + end;
             var lengthText;
             if (sectionLength > 1) {
-               lengthText = find12hr(start) + " - " + find12hr(end);
+                lengthText = find12hr(start) + " - " + find12hr(end);
             } else {
                 lengthText = find12hr(start);
             }
@@ -269,16 +298,13 @@ xhr.onreadystatechange = function() {
     var timeText = hour%12 + ":" + minutes + "" + (find12hr(hour)).slice(-2)
     // document.getElementById("header").innerHTML = hour%12 + ":" + minutes + " " + (find12hr(hour)).slice(-2);
     // document.getElementById("currentTime").innerHTML = timeText
-  }
-};
-
-// Open a GET request to the file URL
-xhr.open('GET', fileUrl, true);
-// Send the request
-xhr.send();
-console.log("chicken nugget");
-console.log(xhr.responseText.length);
-
+    } else {
+    console.warn('CSV string is empty or undefined.');
+    }
+  } catch (error) {
+    console.error('Error:', error);  
+  }  
+})();  
 
 
     function findPrice(t) { // finds the dollar signs of a certain time
