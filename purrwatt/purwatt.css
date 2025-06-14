@@ -74,6 +74,13 @@ h1 {
     flex-direction: column;
     margin: calc(8vw * var(--scale));
 }
+.price-tag{
+    width: calc(21vw * var(--scale));
+    height: calc(21vw * var(--scale));
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+}
 .small-text{
     font-size: calc(22vw * var(--scale));
     line-height: 1vw;

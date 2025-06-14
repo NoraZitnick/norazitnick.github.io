@@ -210,8 +210,21 @@ async function fetchAndGetCsvString() {
         circle.style.backgroundColor = "hsl(" + String((parseInt(Object.values(hours[i])[0]) / 60000) * 125) + ", 90%, 50%)";
         circle.textContent = String(parseInt(parseInt(Object.values(hours[i])[0]) / 60000 * 100));
         hourBox.appendChild(circle);
-        //Price
-
+        if (timeText.textContent === "4 pm" 
+        || timeText.textContent === "5 pm" 
+        || timeText.textContent === "6 pm" 
+        || timeText.textContent === "7 pm" 
+        || timeText.textContent === "8 pm" 
+        || timeText.textContent === "9 pm"
+        || (timeText.textContent === "Now"
+        && (parseInt(now.getHours()) >= 16
+        && parseInt(now.getHours()) <= 21)
+        )) {
+            const priceTag = document.createElement("img");
+            priceTag.className = "price-tag";
+            priceTag.src = "dollar-sign.png";
+            hourBox.appendChild(priceTag);
+        } 
         
         timeOptions.appendChild(hourBox);
     }
