@@ -1,6 +1,7 @@
 :root {
   --scale: calc(1/17);
 }
+/* Default classes */
 body {
     background-color: #F4F4F4;
 }
@@ -22,7 +23,16 @@ h1 {
     margin: 0px;
     color: black;
 }
+h2 {
+    font-size: 10px;
+    color: black;
+    margin: 10px;
+    margin-left: 20px;
+    /*text-transform: uppercase;*/
+    font-weight: bold;
+}
 
+/* Current Energy Available */
 .section {
     background-color: #e3e3e3;
     padding: 1%;
@@ -30,10 +40,24 @@ h1 {
     width: calc(128vw * var(--scale));
     aspect-ratio: 1/1;    
     margin:auto;
-}
+}    
+.circle {
+    border-radius: 50%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    font-size: calc(50vw * var(--scale));   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}        
+.small-text{
+    font-size: calc(22vw * var(--scale));
+    line-height: 1vw;
+}    
 
+/* Hour options */
 .hour {
-    --scalar: value;
     background-color: #e3e3e3;
     padding: calc(12vw * var(--scale));
     border-radius: 10%;
@@ -46,23 +70,11 @@ h1 {
     align-items: center;
     flex-direction: column;
     margin-top: calc(16vw * var(--scale));
-}
+}    
 .first-hour {
     margin-left: calc(14vw * var(--scale));
-}
-.selected {
-    background-color: #F4F4F4;
-}
-.circle {
-    border-radius: 50%;
-    width: 100%;
-    aspect-ratio: 1/1;
-    font-size: calc(50vw * var(--scale));   
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
+}    
+
 .small-circle {
     border-radius: 50%;
     width: calc(46vw * var(--scale));
@@ -73,37 +85,66 @@ h1 {
     align-items: center;
     flex-direction: column;
     margin: calc(8vw * var(--scale));
-}
+}    
 .price-tag{
     width: calc(21vw * var(--scale));
     height: calc(21vw * var(--scale));
     justify-content: flex-end;
     align-items: center;
     flex-direction: column;
-}
-.small-text{
+}    
+
+/*Day Options*/
+.day {
+    background-color: #e3e3e3;
+    padding: calc(18vw * var(--scale));
+    border-radius: 10%;
+    width: calc(176vw * var(--scale));
+    aspect-ratio: 176/230;    
+    margin: calc(5.5vw * var(--scale));
+    display: inline-flex;
     font-size: calc(22vw * var(--scale));
-    line-height: 1vw;
-}
-
-h2 {
-    font-size: 10px;
-    color: black;
-    margin: 10px;
-    margin-left: 20px;
-    /*text-transform: uppercase;*/
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    margin-top: calc(16vw * var(--scale));
+} 
+.first-day {
+    margin-left: calc(14vw * var(--scale));
+}  
+.day-circle {
+    border-radius: 50%;
+    width: calc(102vw * var(--scale));
+    height: calc(102vw * var(--scale));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: calc(20vw * var(--scale));
+}  
+.day-high{
+    font-size: calc(36vw * var(--scale));
     font-weight: bold;
+    float: left;
+    display: inline;
+}
+.day-low{
+    font-size: calc(36vw * var(--scale));
+    font-weight: normal;
+    float: right;
+    display: inline;
 }
 
-
-
-
+/*General*/
+.selected {
+    background-color: #F4F4F4;
+}    
+/*Header*/
 .box-text-indent {
     width: 102px;
     margin: 3px;
     height: 30px;
 }
-
 
 .blue-button {
     background-color: lightskyblue;
@@ -115,12 +156,9 @@ h2 {
     display: inline-block;
 }
 
-
 .hidden {
     display: none;
 }
-
-
 
 select {
     border-width: 0px;
@@ -133,23 +171,6 @@ select {
     width: 100%;
     margin-top: -10px;
 }
-
-
-
-
-.selectButton {
-    border-radius: 30px;
-    border-width: 0px;
-    background-color: palegreen;
-    padding: 20px;
-    margin: 20px;
-    width: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-}
-
-
 
 .sticky-header {
     position: sticky;

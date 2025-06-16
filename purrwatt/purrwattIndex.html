@@ -59,6 +59,7 @@
     <div id="time-options"> <!-- time sections go in here -->
         <p>loading data...</p>
     </div>
+    <div id="day-options"></div>
 
 
 
@@ -139,25 +140,24 @@ async function fetchAndGetCsvString() {
     for (let i = 0; i < rows.length; i++) {
         // Split the row into an array using the comma separator
         const row = rows[i].split(',');
-        console.log(row);
-        obj[row[0]] = (parseInt(row[5]) + parseInt(row[9]))- parseInt(row[3]) + parseInt(row[8]);  
+        obj[row[0]] = parseInt(((parseInt(row[6]) + parseInt(row[9]))- (parseInt(row[4]) + parseInt(row[8])))/ 60000 * 100);  
 
         
         // Add the object to the series array
     }
     series.push(obj);
+    console.log(series);
 
 
     //Make current energy avaliability circle
     const circle = document.getElementById("circle");
     const now = new Date();
-    const dateString = String((String(now.getMonth()+1).padStart(2, '0')) + "/" + now.getDate()
-     + "/" + now.getFullYear() + " " + (now.getMinutes()> 55 ? now.getHours() +1 : now.getHours())
-     + ":" + (now.getMinutes()> 55 ? "00" :String(Math.round(parseInt(now.getMinutes()) / 5) * 5).padStart(2, '0')));
+    const dateString = findDateStamp(0); 
     console.log(dateString);
     console.log(series[0][dateString]);
-    const goodness = parseInt((parseInt(series[0][dateString]) / 60000) * 100)
-    circle.style.backgroundColor = "hsl(" + String((parseInt(series[0][dateString]) / 60000) * 125) + ", 90%, 50%)";
+    
+    const goodness = String(series[0][dateString]);
+    circle.style.backgroundColor = "hsl(" + String(series[0][dateString] * 1.25) + ", 90%, 50%)";
 
     const smallText = document.createElement("div");
     smallText.classList.add("small-text");
@@ -177,12 +177,13 @@ async function fetchAndGetCsvString() {
     const timeOptions = document.getElementById("time-options");
     const hours = [];
     const numHours = 23-parseInt(now.getHours()) + 6*24;
+    const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     for (let i = 0; i < numHours; i++){
-        const dateString = String((String(now.getMonth()+1).padStart(2, '0')) + "/" + (parseInt(now.getDate()) + parseInt((i+parseInt(now.getHours()))/24))
-        + "/" + now.getFullYear() + " " + String(((parseInt(now.getMinutes()> 55 ? now.getHours() +1 : now.getHours()) + i)%24)).padStart(2, '0')
-        + ":" + ("00"));
+
+        const dateString = findDateStamp(i*60 - now.getMinutes() + 5);        
         const obj = {};
-        console.log(dateString);
+
+        console.log(dateString + " " + i);
         obj[dateString] = series[0][dateString];
         hours.push(obj);
     }
@@ -207,8 +208,8 @@ async function fetchAndGetCsvString() {
         //Circle
         const circle = document.createElement("div");
         circle.className = "small-circle";
-        circle.style.backgroundColor = "hsl(" + String((parseInt(Object.values(hours[i])[0]) / 60000) * 125) + ", 90%, 50%)";
-        circle.textContent = String(parseInt(parseInt(Object.values(hours[i])[0]) / 60000 * 100));
+        circle.style.backgroundColor = "hsl(" + Object.values(hours[i])[0] *1.25 + ", 90%, 50%)";
+        circle.textContent = i === 0 ? goodness : String(Object.values(hours[i])[0]);
         hourBox.appendChild(circle);
         if (timeText.textContent === "4 pm" 
         || timeText.textContent === "5 pm" 
@@ -227,8 +228,78 @@ async function fetchAndGetCsvString() {
         } 
         
         timeOptions.appendChild(hourBox);
+
+
+        
     }
-    } else {
+    // Day options
+    const dayOptions = document.getElementById("day-options");
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayMaxes = [];
+    for (let i = 0; i < 7; i++){
+        const dateString = String((String(now.getMonth()+1).padStart(2, '0')) + "/" + (parseInt(now.getDate()) + parseInt((i+parseInt(now.getHours()))/24))
+        + "/" + now.getFullYear() + " " + String(((parseInt(now.getMinutes()> 55 ? now.getHours() +1 : now.getHours()) + i)%24)).padStart(2, '0')
+        + ":" + ("00"));
+        const obj = {};
+        console.log(dateString);
+        obj[dateString] = series[0][dateString];
+        hours.push(obj);
+    }
+    for (let i = 0; i < 7; i++) {
+        const dayBox = document.createElement("div");
+        dayBox.className = "day";
+        const timeText = document.createElement("p");
+        if (i === 0) {
+            dayBox.classList.add("first-day");
+            dayBox.classList.add("selected");
+            timeText.textContent = "Today";
+        } else{
+            const dayOfWeekNumber = now.getDay() + i;
+            timeText.textContent = daysOfWeek[dayOfWeekNumber];
+        }
+        dayBox.appendChild(timeText);
+        //Circle
+        let dayHigh = 0;
+        for (let j = 0; j < (24*60); j+=5){
+            const dateString = findDateStamp(j - (now.getMinutes() + now.getHours() * 60) + (i * 24 * 60));
+            if (series[0][dateString] > dayHigh) {
+                dayHigh = series[0][dateString];
+            }
+        }
+        const circle = document.createElement("div");
+        circle.className = "day-circle";
+        circle.style.backgroundColor = "hsl(" + dayHigh *1.25 + ", 90%, 50%)";
+        dayBox.appendChild(circle);
+        // Add the day high
+        const dayHighText = document.createElement("p");
+        dayHighText.className = "day-high";
+        dayHighText.textContent = String(dayHigh);
+        dayBox.appendChild(dayHighText);
+
+        // Add the day low
+        let dayLow = 100;
+        for (let j = 0; j < (24*60); j+=5){
+            const dateString = findDateStamp(j - (now.getMinutes() + now.getHours() * 60) + (i * 24 * 60));
+            if (series[0][dateString] < dayLow) {
+                dayLow = series[0][dateString];
+            }
+        }
+        const dayLowText = document.createElement("p");
+        dayLowText.className = "day-low";
+        dayLowText.textContent = String(dayLow);
+        
+        const container = document.createElement("div");
+        container.style.justifyContent = "space-between";
+        container.style.display = "flex";
+        container.style.width = "100%";
+        
+        container.appendChild(dayHighText);
+        container.appendChild(dayLowText);
+        dayBox.appendChild(container);
+
+        dayOptions.appendChild(dayBox);
+    }
+} else {
     console.warn('CSV string is empty or undefined.');
     }
   } catch (error) {
@@ -266,6 +337,30 @@ async function fetchAndGetCsvString() {
         }
         return output + meridiem
      }
+    /**
+     * Finds the date stamp for a given time.
+     * @param {string} t - number of minutes past current time.
+     */
+    function findDateStamp(t){ 
+        const now = new Date();
+        const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const originalMinutes = now.getMinutes() + t;
+        const originalHour = String(((parseInt(now.getMinutes()> 57.5 ? now.getHours() +1 : now.getHours()) + parseInt(originalMinutes/60))));
+        const originalDay = now.getDate() + parseInt((originalHour)/24);
+        const originalMonth = now.getMonth() + 1 + (originalDay > monthLengths[now.getMonth() + 1] ? 1 : 0);
+
+        const minutes = (Math.round(parseInt(originalMinutes) / 5) * 5) % 60; // round to nearest 5 minutes
+        const hour = originalHour%24;
+        const day = originalDay > monthLengths[now.getMonth()] ? originalDay - monthLengths[now.getMonth()] : originalDay;
+        const year = now.getFullYear() + (originalMonth > 12 ? 1 : 0);
+        const month = originalMonth > 12 ? originalMonth - 12 : originalMonth;
+        // Create the date string in the format "MM/DD/YYYY HH:MM"
+        const dateString = String(month).padStart(2, '0') + "/" + String(day).padStart(2, '0')
+        + "/" + year + " " + String(hour).padStart(2, '0')
+        + ":" + String(minutes).padStart(2, '0');
+        return dateString;  
+    }
 
 
 </script>

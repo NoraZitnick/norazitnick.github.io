@@ -150,7 +150,7 @@ async function fetchAndGetCsvString() {
         headers.push(row[0]);
         
         console.log(row);
-        values.push((parseInt(row[5]) + parseInt(row[9]))- parseInt(row[3]) + parseInt(row[8]) );  
+        values.push((parseInt(row[6]) + parseInt(row[9]))- parseInt(row[4]) + parseInt(row[8]) );  
 
         var colorIndex = i - 1;
 
