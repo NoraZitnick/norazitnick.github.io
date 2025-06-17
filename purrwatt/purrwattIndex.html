@@ -35,23 +35,7 @@
     
     <h1>Current Energy Avaliability</h1>
     <div class="section" id="current-energy">
-            <!-- peak time warning
-            <div id="peakMessage" class="hidden">
-                <div class="warning-icon"></div>
-                <p class="yellow-text" style="padding-top: 7px;">
-                    You are currently in a peak usage time.
-                </p>  
-                <hr style="margin-top: 20px;">
-            </div>
-            
-            
-            <div style="display: flex; justify-content: space-between; padding-top: 20px;">
-                <p class="green-text" style="margin-bottom: 5px; margin-top: -2px;" id="recommendedtime">--</p>
-                <div class="blue-button button" style="margin-top: -10px; height: min-content;" id="reminderbutton" >--</div> 
-            </div> -->
-            <div class="circle" id="circle">
-                <p></p>
-            </div>
+
     </div>
     
     
@@ -107,10 +91,10 @@ async function fetchAndGetCsvString() {
   }
 }
 
+const colorRange = 1.75;
+const boxesOnScreen = 12; // Number of hour boxes to display
 (async () => {
   try {
-    const colorRange = 1.75;
-    const boxesOnScreen = 12; // Number of hour boxes to display
 
     const csvData = await fetchAndGetCsvString();
     if (csvData && csvData.trim() !== '') {
@@ -134,7 +118,9 @@ async function fetchAndGetCsvString() {
 
 
     //Make current energy avaliability circle
-    const circle = document.getElementById("circle");
+    const currentEnergy = document.getElementById("current-energy");
+    const circle = document.createElement("div");
+    circle.className = "circle";
     const now = new Date();
     const dateString = findDateStamp(0); 
     console.log(dateString);
@@ -142,20 +128,17 @@ async function fetchAndGetCsvString() {
     
     const goodness = String(series[0][dateString]);
     circle.style.backgroundColor = "hsl(" + String(series[0][dateString] * parseInt(colorRange)) + ", 90%, 50%)";
-
-    const smallText = document.createElement("div");
-    smallText.classList.add("small-text");
-    smallText.textContent = String(goodness > 90 ? "Best"
-    : goodness > 75 ? "Great"
-    : goodness > 60 ? "Good"
-    : goodness >  45? "Okay" 
-    : goodness > 30 ? "Poor"
-    : goodness > 15 ? "Bad"
-    : "Avoid Use");
-
-
-    circle.appendChild(smallText);
+    
     circle.appendChild(document.createTextNode(goodness));
+    currentEnergy.appendChild(circle);
+
+    currentEnergy.append(String(goodness > 90 ? "Best"
+    : goodness > 75 ? "Very High"
+    : goodness > 60 ? "High"
+    : goodness >  45? "Moderate" 
+    : goodness > 30 ? "Low"
+    : goodness > 15 ? "Very Low"
+    : "Avoid Use"));
 
     //Make hour boxes
     const timeOptions = document.getElementById("time-options");
@@ -176,16 +159,10 @@ async function fetchAndGetCsvString() {
     for (let i = 0; i < parseInt(boxesOnScreen); i++){
         const hourBox = document.createElement("button");
         hourBox.className = "hour";
-        const timeText = document.createElement("p");
-        //hour
         if (i === 0) {
             hourBox.classList.add("first-hour");
-            // hourBox.classList.add("selected");
-            timeText.textContent = "Now";
-        } else{
-            timeText.textContent = find12hr(parseInt(Object.keys(hours[i])[0].split(" ")[1].split(":")[0]));
         }
-        
+        const timeText = document.createElement("p");
         hourBox.appendChild(timeText);
         hourBox.setAttribute("index", i);
         
@@ -193,86 +170,19 @@ async function fetchAndGetCsvString() {
         //Circle
         const circle = document.createElement("div");
         circle.className = "small-circle";
-        circle.style.backgroundColor = "hsl(" + Object.values(hours[i])[0] *parseInt(colorRange) + ", 90%, 50%)";
-        circle.textContent = i === 0 ? goodness : String(Object.values(hours[i])[0]);
         hourBox.appendChild(circle);
-        if (timeText.textContent === "4 pm" 
-        || timeText.textContent === "5 pm" 
-        || timeText.textContent === "6 pm" 
-        || timeText.textContent === "7 pm" 
-        || timeText.textContent === "8 pm" 
-        || timeText.textContent === "9 pm"
-        || (timeText.textContent === "Now"
-        && (parseInt(now.getHours()) >= 16
-        && parseInt(now.getHours()) <= 21)
-        )) {
-            const priceTag = document.createElement("img");
-            priceTag.className = "price-tag";
-            priceTag.src = "dollar-sign.png";
-            hourBox.appendChild(priceTag);
-        } 
+
         
         timeOptions.appendChild(hourBox);
-
-
-        
     }
+    console.log("Hours: " + hours.length);
+    renderHours(0, hours); // Render the first set of hours
 
-    const nextButton = document.createElement("button");
-    nextButton.className = "next";
-    nextButton.onclick = function() {
-        const hourBoxes = document.querySelectorAll(".hour");
-
-        for (let i = 0; i < hourBoxes.length; i++) {
-            const hourBox = hourBoxes[i];
-            hourBox.setAttribute("index", parseInt(boxesOnScreen)+parseInt(hourBox.getAttribute("index")));
-            const timeText = hourBox.querySelector("p");
-            timeText.textContent = find12hr(parseInt(Object.keys(hours[parseInt(hourBox.getAttribute("index"))])[0].split(" ")[1].split(":")[0]));
-            //circle
-            const circle = hourBox.querySelector(".small-circle");
-            circle.style.backgroundColor = "hsl(" + Object.values(hours[hourBox.getAttribute("index")])[0] *parseInt(colorRange) + ", 90%, 50%)";
-            circle.textContent = i === 0 ? goodness : String(Object.values(hours[hourBox.getAttribute("index")])[0]);
-            hourBox.appendChild(circle);
-            if (hourBox.querySelector(".price-tag")) {
-                // Remove the price tag if it exists
-                hourBox.removeChild(hourBox.querySelector(".price-tag"));
-            }
-            if (timeText.textContent === "4 pm" 
-            || timeText.textContent === "5 pm" 
-            || timeText.textContent === "6 pm" 
-            || timeText.textContent === "7 pm" 
-            || timeText.textContent === "8 pm" 
-            || timeText.textContent === "9 pm"
-            || (timeText.textContent === "Now"
-            && (parseInt(now.getHours()) >= 16
-            && parseInt(now.getHours()) <= 21)
-            )) {
-                const priceTag = document.createElement("img");
-                priceTag.className = "price-tag";
-                priceTag.src = "dollar-sign.png";
-                hourBox.appendChild(priceTag);
-            } 
-        }
-    };
-    const nextArrow = document.createElement("img");
-    nextArrow.src = "next-arrow.png";
-    nextArrow.className = "next-arrow";
-    nextButton.appendChild(nextArrow);
-    timeOptions.appendChild(nextButton);
 
     // Day options
     const dayOptions = document.getElementById("day-options");
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayMaxes = [];
-    for (let i = 0; i < 7; i++){
-        const dateString = String((String(now.getMonth()+1).padStart(2, '0')) + "/" + (parseInt(now.getDate()) + parseInt((i+parseInt(now.getHours()))/24))
-        + "/" + now.getFullYear() + " " + String(((parseInt(now.getMinutes()> 55 ? now.getHours() +1 : now.getHours()) + i)%24)).padStart(2, '0')
-        + ":" + ("00"));
-        const obj = {};
-        console.log(dateString);
-        obj[dateString] = series[0][dateString];
-        hours.push(obj);
-    }
+
     for (let i = 0; i < 7; i++) {
         const dayBox = document.createElement("div");
         dayBox.className = "day";
@@ -389,6 +299,87 @@ async function fetchAndGetCsvString() {
         + "/" + year + " " + String(hour).padStart(2, '0')
         + ":" + String(minutes).padStart(2, '0');
         return dateString;  
+    }
+
+    function renderHours(hourIndex, hours){
+        const now = new Date();
+
+        const timeOptions = document.getElementById("time-options");
+        const hourBoxes = document.querySelectorAll(".hour");
+        
+        for (let i = 0; i < hourBoxes.length; i++) {
+            const hourBox = hourBoxes[i];
+            hourBox.setAttribute("index", parseInt(hourIndex) + i);
+            const timeText = hourBox.querySelector("p");
+            timeText.textContent = parseInt(hourBox.getAttribute("index")) === 0 ? "Now" 
+                :find12hr(parseInt(Object.keys(hours[parseInt(hourBox.getAttribute("index"))])[0].split(" ")[1].split(":")[0]));
+            //circle
+            const circle = hourBox.querySelector(".small-circle");
+            circle.style.backgroundColor = "hsl(" + Object.values(hours[hourBox.getAttribute("index")])[0] *parseInt(colorRange) + ", 90%, 50%)";
+            circle.textContent = parseInt(hourBox.getAttribute("index")) === 0 ? document.getElementsByClassName("circle")[0].textContent
+                :String(Object.values(hours[hourBox.getAttribute("index")])[0]);
+            hourBox.appendChild(circle);
+            if (hourBox.querySelector(".price-tag")) {
+                // Remove the price tag if it exists
+                hourBox.removeChild(hourBox.querySelector(".price-tag"));
+            }
+            if (timeText.textContent === "4 pm" 
+            || timeText.textContent === "5 pm" 
+            || timeText.textContent === "6 pm" 
+            || timeText.textContent === "7 pm" 
+            || timeText.textContent === "8 pm" 
+            || timeText.textContent === "9 pm"
+            || (timeText.textContent === "Now"
+            && (parseInt(now.getHours()) >= 16
+            && parseInt(now.getHours()) <= 21)
+            )) {
+                const priceTag = document.createElement("img");
+                priceTag.className = "price-tag";
+                priceTag.src = "dollar-sign.png";
+                hourBox.appendChild(priceTag);
+            } 
+        }
+        if (timeOptions.querySelector(".back")) {
+            timeOptions.removeChild(timeOptions.querySelector(".back")); 
+        }
+        if (timeOptions.querySelector(".next")) {
+            timeOptions.removeChild(timeOptions.querySelector(".next")); 
+        }
+        if (hourIndex < (parseInt(hours.length)-12)) {
+            const nextButton = document.createElement("button");
+            nextButton.className = "next arrow-box";
+            const nextArrow = document.createElement("img");
+            nextArrow.src = "next-arrow.png";
+            nextArrow.className = "next-arrow";
+            nextButton.appendChild(nextArrow);
+            timeOptions.appendChild(nextButton);
+            nextButton.onclick = function() {
+                renderHours((hourIndex<(parseInt(hours.length)-boxesOnScreen*2-1) ? parseInt(hourIndex) + parseInt(boxesOnScreen) : (parseInt(hours.length)-boxesOnScreen)), hours);
+            };
+        }
+        if (hourIndex > 0) {
+            const backButton = document.createElement("button");
+            backButton.className = "back arrow-box";
+            const backArrow = document.createElement("img");
+            backArrow.src = "next-arrow.png";
+            backArrow.className = "back-arrow";
+            backButton.appendChild(backArrow);
+            timeOptions.insertBefore(backButton, timeOptions.firstChild);
+            backButton.onclick = function() {
+                renderHours((hourIndex>(boxesOnScreen*2-1) ? parseInt(hourIndex) - parseInt(boxesOnScreen) : (0)), hours);            
+            };
+        }
+        const days = document.getElementsByClassName("day");
+        const day = parseInt((hourIndex + now.getHours())/24);
+        console.log(day);
+        for (let i = 0; i < document.getElementsByClassName("day").length; i++) {
+            if (parseInt(i) === parseInt(day)) {
+                days[i].classList.add("selected");
+            } else {
+                days[i].classList.remove("selected");
+            }
+        }
+        
     }
 
 
