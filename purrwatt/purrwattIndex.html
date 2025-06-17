@@ -57,9 +57,15 @@
     
     
     <div id="time-options"> <!-- time sections go in here -->
-        <p>loading data...</p>
+        <p>loading data... &#40This may take up to 30 seconds&#41</p>
     </div>
     <div id="day-options"></div>
+    <p class = footer>The Energy Availability is a value from 0 to 100 that indicates how 
+        much energy is currently available on the power grid. A higher score 
+        means more clean energy is available for use—an ideal time to run appliances 
+        or charge devices. Lower scores suggest higher demand or less renewable energy, 
+        so and more gas generators to keep up with demand—a time to conserve energy and 
+        not run appliances.</p>
 
 
 
@@ -78,32 +84,7 @@ function showInfo(idName) {
 
 var flowers = [];
 
-function createflowers(series) {
-    const arr = Object.values(series[0]);
-    console.log(series);
-    for (let i = 0; i < 2000; i += 12) {
-        const subArr = arr.slice(i+1, i+21);
-        if (subArr.length === 0) continue;
 
-        const sum = subArr.reduce((accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue));
-        console.log(sum);
-        if (sum < 5000*12) {
-            flowers.push(3)
-            console.log("three flowers");
-        } else if (sum < 12500*12) {
-            flowers.push(2)
-            console.log("two flowers");
-        } else if (sum < 20000*12) {
-            flowers.push(1)
-            console.log("one leaf");
-        } else {
-            flowers.push(0)
-            console.log("no flowers");
-        }
-    }
-    console.log("END DATA:");
-    console.log(flowers);
-}
 
 function calculateEnergyAvailability(date, ){
 
@@ -128,6 +109,9 @@ async function fetchAndGetCsvString() {
 
 (async () => {
   try {
+    const colorRange = 1.75;
+    const boxesOnScreen = 12; // Number of hour boxes to display
+
     const csvData = await fetchAndGetCsvString();
     if (csvData && csvData.trim() !== '') {
 
@@ -157,7 +141,7 @@ async function fetchAndGetCsvString() {
     console.log(series[0][dateString]);
     
     const goodness = String(series[0][dateString]);
-    circle.style.backgroundColor = "hsl(" + String(series[0][dateString] * 1.25) + ", 90%, 50%)";
+    circle.style.backgroundColor = "hsl(" + String(series[0][dateString] * parseInt(colorRange)) + ", 90%, 50%)";
 
     const smallText = document.createElement("div");
     smallText.classList.add("small-text");
@@ -177,7 +161,6 @@ async function fetchAndGetCsvString() {
     const timeOptions = document.getElementById("time-options");
     const hours = [];
     const numHours = 23-parseInt(now.getHours()) + 6*24;
-    const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     for (let i = 0; i < numHours; i++){
 
         const dateString = findDateStamp(i*60 - now.getMinutes() + 5);        
@@ -190,25 +173,27 @@ async function fetchAndGetCsvString() {
     console.log(hours);
     timeOptions.innerHTML = ""; 
 
-    for (let i = 0; i < 11; i++){
-        const hourBox = document.createElement("div");
+    for (let i = 0; i < parseInt(boxesOnScreen); i++){
+        const hourBox = document.createElement("button");
         hourBox.className = "hour";
         const timeText = document.createElement("p");
         //hour
         if (i === 0) {
             hourBox.classList.add("first-hour");
-            hourBox.classList.add("selected");
+            // hourBox.classList.add("selected");
             timeText.textContent = "Now";
         } else{
             timeText.textContent = find12hr(parseInt(Object.keys(hours[i])[0].split(" ")[1].split(":")[0]));
         }
         
         hourBox.appendChild(timeText);
+        hourBox.setAttribute("index", i);
+        
         
         //Circle
         const circle = document.createElement("div");
         circle.className = "small-circle";
-        circle.style.backgroundColor = "hsl(" + Object.values(hours[i])[0] *1.25 + ", 90%, 50%)";
+        circle.style.backgroundColor = "hsl(" + Object.values(hours[i])[0] *parseInt(colorRange) + ", 90%, 50%)";
         circle.textContent = i === 0 ? goodness : String(Object.values(hours[i])[0]);
         hourBox.appendChild(circle);
         if (timeText.textContent === "4 pm" 
@@ -232,6 +217,49 @@ async function fetchAndGetCsvString() {
 
         
     }
+
+    const nextButton = document.createElement("button");
+    nextButton.className = "next";
+    nextButton.onclick = function() {
+        const hourBoxes = document.querySelectorAll(".hour");
+
+        for (let i = 0; i < hourBoxes.length; i++) {
+            const hourBox = hourBoxes[i];
+            hourBox.setAttribute("index", parseInt(boxesOnScreen)+parseInt(hourBox.getAttribute("index")));
+            const timeText = hourBox.querySelector("p");
+            timeText.textContent = find12hr(parseInt(Object.keys(hours[parseInt(hourBox.getAttribute("index"))])[0].split(" ")[1].split(":")[0]));
+            //circle
+            const circle = hourBox.querySelector(".small-circle");
+            circle.style.backgroundColor = "hsl(" + Object.values(hours[hourBox.getAttribute("index")])[0] *parseInt(colorRange) + ", 90%, 50%)";
+            circle.textContent = i === 0 ? goodness : String(Object.values(hours[hourBox.getAttribute("index")])[0]);
+            hourBox.appendChild(circle);
+            if (hourBox.querySelector(".price-tag")) {
+                // Remove the price tag if it exists
+                hourBox.removeChild(hourBox.querySelector(".price-tag"));
+            }
+            if (timeText.textContent === "4 pm" 
+            || timeText.textContent === "5 pm" 
+            || timeText.textContent === "6 pm" 
+            || timeText.textContent === "7 pm" 
+            || timeText.textContent === "8 pm" 
+            || timeText.textContent === "9 pm"
+            || (timeText.textContent === "Now"
+            && (parseInt(now.getHours()) >= 16
+            && parseInt(now.getHours()) <= 21)
+            )) {
+                const priceTag = document.createElement("img");
+                priceTag.className = "price-tag";
+                priceTag.src = "dollar-sign.png";
+                hourBox.appendChild(priceTag);
+            } 
+        }
+    };
+    const nextArrow = document.createElement("img");
+    nextArrow.src = "next-arrow.png";
+    nextArrow.className = "next-arrow";
+    nextButton.appendChild(nextArrow);
+    timeOptions.appendChild(nextButton);
+
     // Day options
     const dayOptions = document.getElementById("day-options");
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -255,7 +283,7 @@ async function fetchAndGetCsvString() {
             timeText.textContent = "Today";
         } else{
             const dayOfWeekNumber = now.getDay() + i;
-            timeText.textContent = daysOfWeek[dayOfWeekNumber];
+            timeText.textContent = daysOfWeek[dayOfWeekNumber%7];
         }
         dayBox.appendChild(timeText);
         //Circle
@@ -268,7 +296,8 @@ async function fetchAndGetCsvString() {
         }
         const circle = document.createElement("div");
         circle.className = "day-circle";
-        circle.style.backgroundColor = "hsl(" + dayHigh *1.25 + ", 90%, 50%)";
+        circle.style.backgroundColor = "hsl(" + dayHigh *parseInt(colorRange) + ", 90%, 50%)";
+        circle.textContent = String(dayHigh);
         dayBox.appendChild(circle);
         // Add the day high
         const dayHighText = document.createElement("p");
@@ -295,7 +324,7 @@ async function fetchAndGetCsvString() {
         
         container.appendChild(dayHighText);
         container.appendChild(dayLowText);
-        dayBox.appendChild(container);
+        dayBox.appendChild(dayLowText);
 
         dayOptions.appendChild(dayBox);
     }

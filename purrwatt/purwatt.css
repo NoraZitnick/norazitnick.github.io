@@ -3,7 +3,7 @@
 }
 /* Default classes */
 body {
-    background-color: #F4F4F4;
+    background-color: #f4f4f4;
 }
 
 
@@ -19,7 +19,7 @@ h1 {
 }
 
 * {
-    font-family: 'arial', sans-serif;
+    font-family: 'Verdana', sans-serif;
     margin: 0px;
     color: black;
 }
@@ -31,7 +31,10 @@ h2 {
     /*text-transform: uppercase;*/
     font-weight: bold;
 }
-
+button {
+  all: unset;
+  display: block;
+}
 /* Current Energy Available */
 .section {
     background-color: #e3e3e3;
@@ -61,8 +64,8 @@ h2 {
     background-color: #e3e3e3;
     padding: calc(12vw * var(--scale));
     border-radius: 10%;
-    width: calc(102vw * var(--scale));
-    aspect-ratio: 102/128;    
+    width: calc(100vw * var(--scale));
+    aspect-ratio: 100/128;    
     margin: calc(4.5vw * var(--scale));
     display: inline-flex;
     font-size: calc(22vw * var(--scale));
@@ -93,7 +96,25 @@ h2 {
     align-items: center;
     flex-direction: column;
 }    
-
+.next{
+    background-image: linear-gradient(to right, rgba(244, 244, 244, 0), rgba(244, 244, 244, 50),rgba(244, 244, 244, 100),rgba(244, 244, 244, 100), rgba(244, 244, 244, 100));
+    padding: calc(12vw * var(--scale));
+    width: calc(40vw * var(--scale));
+    aspect-ratio: 40/128;    
+    margin: calc(4.5vw * var(--scale));
+    display: inline-flex;
+    font-size: calc(22vw * var(--scale));
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: calc(16vw * var(--scale));
+    margin-left: calc(-30vw * var(--scale));
+    vertical-align: top;
+}
+.next-arrow{
+    width: calc(40vw * var(--scale));
+    height: auto;
+}
 /*Day Options*/
 .day {
     background-color: #e3e3e3;
@@ -121,6 +142,7 @@ h2 {
     align-items: center;
     flex-direction: column;
     margin: calc(20vw * var(--scale));
+    font-size: calc(36vw * var(--scale));
 }  
 .day-high{
     font-size: calc(36vw * var(--scale));
@@ -129,7 +151,7 @@ h2 {
     display: inline;
 }
 .day-low{
-    font-size: calc(36vw * var(--scale));
+    font-size: calc(22vw * var(--scale));
     font-weight: normal;
     float: right;
     display: inline;
@@ -139,6 +161,16 @@ h2 {
 .selected {
     background-color: #F4F4F4;
 }    
+/* Footer */
+.footer {
+    width: calc(544vw * var(--scale));
+    font-size: calc(14vw * var(--scale));
+    align-self: center;
+    justify-self: center;
+    text-align: justify ;
+    text-align-last: center;
+    margin-top: calc(16vw * var(--scale));
+}
 /*Header*/
 .box-text-indent {
     width: 102px;
