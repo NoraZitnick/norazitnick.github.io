@@ -47,7 +47,7 @@ button {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: calc(30vw * var(--scale));
+    font-size: calc(26vw * var(--scale));
 
 }    
 .circle {
@@ -147,7 +147,7 @@ button {
     align-items: center;
     flex-direction: column;
     margin-top: calc(16vw * var(--scale));
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px calc(10vw * var(--scale)) rgba(0, 0, 0, 0.5);
 } 
 .first-day {
     margin-left: calc(14vw * var(--scale));

@@ -225,7 +225,7 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         }
         const dayLowText = document.createElement("p");
         dayLowText.className = "day-low";
-        dayLowText.textContent = String(dayLow);
+        dayLowText.textContent = "Low: " + String(dayLow);
         
         const container = document.createElement("div");
         container.style.justifyContent = "space-between";
