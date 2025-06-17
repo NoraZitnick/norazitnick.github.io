@@ -91,8 +91,8 @@ async function fetchAndGetCsvString() {
   }
 }
 
-const colorRange = 1.75;
-const boxesOnScreen = 12; // Number of hour boxes to display
+const colorRange = 1.7;
+const boxesOnScreen = 10; // Number of hour boxes to display
 (async () => {
   try {
 
@@ -235,6 +235,9 @@ const boxesOnScreen = 12; // Number of hour boxes to display
         container.appendChild(dayHighText);
         container.appendChild(dayLowText);
         dayBox.appendChild(dayLowText);
+        dayBox.onclick = function() {
+            renderHours(i*24-now.getHours()>=0 ? i*24-now.getHours() : 0, hours);
+        };
 
         dayOptions.appendChild(dayBox);
     }

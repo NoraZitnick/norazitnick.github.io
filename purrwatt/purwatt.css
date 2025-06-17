@@ -37,7 +37,7 @@ button {
 }
 /* Current Energy Available */
 .section {
-    background-color: #e3e3e3;
+    background-color: #eaeaea;
     padding: calc(12vw * var(--scale));
     border-radius: 10%;
     width: calc(128vw * var(--scale));
@@ -64,14 +64,14 @@ button {
 
 /* Hour options */
 .hour {
-    background-color: #e3e3e3;
+    background-color: #eaeaea;
     padding: calc(12vw * var(--scale));
     border-radius: 10%;
-    width: calc(100vw * var(--scale));
-    aspect-ratio: 100/128;    
+    width: calc(120vw * var(--scale));
+    aspect-ratio: 120/140;    
     margin: calc(4.5vw * var(--scale));
     display: inline-flex;
-    font-size: calc(22vw * var(--scale));
+    font-size: calc(26vw * var(--scale));
     justify-content: start;
     align-items: center;
     flex-direction: column;
@@ -83,18 +83,18 @@ button {
 
 .small-circle {
     border-radius: 50%;
-    width: calc(46vw * var(--scale));
-    height: calc(46vw * var(--scale));
-    font-size: calc(22vw * var(--scale));
+    width: calc(60vw * var(--scale));
+    height: calc(60vw * var(--scale));
+    font-size: calc(26vw * var(--scale));
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: calc(8vw * var(--scale));
+    margin: calc(12vw * var(--scale));
 }    
 .price-tag{
-    width: calc(21vw * var(--scale));
-    height: calc(21vw * var(--scale));
+    width: calc(22vw * var(--scale));
+    height: calc(22vw * var(--scale));
     justify-content: flex-end;
     align-items: center;
     flex-direction: column;
@@ -102,7 +102,7 @@ button {
 .arrow-box{
     padding: calc(12vw * var(--scale));
     width: calc(40vw * var(--scale));
-    aspect-ratio: 40/128;    
+    aspect-ratio: 40/140;    
     margin: calc(4.5vw * var(--scale));
     display: inline-flex;
     font-size: calc(22vw * var(--scale));
@@ -135,18 +135,19 @@ button {
 
 /*Day Options*/
 .day {
-    background-color: #e3e3e3;
+    background-color: #eaeaea;
     padding: calc(18vw * var(--scale));
     border-radius: 10%;
     width: calc(176vw * var(--scale));
     aspect-ratio: 176/230;    
     margin: calc(5.5vw * var(--scale));
     display: inline-flex;
-    font-size: calc(22vw * var(--scale));
+    font-size: calc(30vw * var(--scale));
     justify-content: start;
     align-items: center;
     flex-direction: column;
     margin-top: calc(16vw * var(--scale));
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 } 
 .first-day {
     margin-left: calc(14vw * var(--scale));
@@ -160,7 +161,7 @@ button {
     align-items: center;
     flex-direction: column;
     margin: calc(20vw * var(--scale));
-    font-size: calc(36vw * var(--scale));
+    font-size: calc(48vw * var(--scale));
 }  
 .day-high{
     font-size: calc(36vw * var(--scale));
@@ -169,7 +170,7 @@ button {
     display: inline;
 }
 .day-low{
-    font-size: calc(22vw * var(--scale));
+    font-size: calc(30vw * var(--scale));
     font-weight: normal;
     float: right;
     display: inline;
@@ -177,7 +178,7 @@ button {
 
 /*General*/
 .selected {
-    background-color: #F4F4F4;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
 }    
 /* Footer */
 .footer {
