@@ -59,7 +59,7 @@ button {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-        margin: calc(8vw * var(--scale));
+    margin: calc(8vw * var(--scale));
 }        
 
 /* Hour options */
@@ -147,7 +147,7 @@ button {
     align-items: center;
     flex-direction: column;
     margin-top: calc(16vw * var(--scale));
-    box-shadow: 0px 0px calc(10vw * var(--scale)) rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px calc(10vw * var(--scale)) 0px rgba(0, 0, 0, 0.5);
 } 
 .first-day {
     margin-left: calc(14vw * var(--scale));
@@ -178,7 +178,7 @@ button {
 
 /*General*/
 .selected {
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
 }    
 /* Footer */
 .footer {
