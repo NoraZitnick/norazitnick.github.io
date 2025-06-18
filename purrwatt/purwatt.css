@@ -42,8 +42,7 @@ button {
     padding: calc(12vw * var(--scale));
     border-radius: 10%;
     width: calc(128vw * var(--scale));
-    height: calc(128vw * var(--scale));
-    margin:auto;
+    margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -186,9 +185,9 @@ button {
     width: calc(544vw * var(--scale));
     font-size: calc(14vw * var(--scale));
     align-self: center;
-    justify-self: center;
     text-align: justify ;
     text-align-last: center;
+    margin: 0 auto;
     margin-top: calc(16vw * var(--scale));
 }
 /*Header*/
