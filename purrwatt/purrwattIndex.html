@@ -235,8 +235,12 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         container.appendChild(dayHighText);
         container.appendChild(dayLowText);
         dayBox.appendChild(dayLowText);
+
         dayBox.onclick = function() {
-            renderHours(i*24-now.getHours()>=0 ? i*24-now.getHours() : 0, hours);
+            const index = (parseInt(document.getElementsByClassName("first-hour")[0].getAttribute("index"))+parseInt(now.getHours()))%24;
+            console.log("Index: " + (index));
+            console.log("Hour index: " + (i*24)%24);
+            renderHours(i*24-now.getHours()>=0 ? (i*24-now.getHours()) + index : 0, hours);
         };
 
         dayOptions.appendChild(dayBox);
@@ -304,8 +308,18 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         return dateString;  
     }
 
-    function renderHours(hourIndex, hours){
+    function renderHours(idealHourIndex, hours){
         const now = new Date();
+
+        var hourIndex;
+        console.log("Num " + String(23-parseInt(now.getHours()) + 6*24))
+        if (idealHourIndex > 23-parseInt(now.getHours()) + 6*24 - boxesOnScreen) {
+            hourIndex = hours.length - boxesOnScreen; 
+        } else if (idealHourIndex < 0) {
+            hourIndex = 0;
+        } else {
+            hourIndex = idealHourIndex;
+        }
 
         const timeOptions = document.getElementById("time-options");
         const hourBoxes = document.querySelectorAll(".hour");
