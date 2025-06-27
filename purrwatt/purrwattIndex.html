@@ -294,7 +294,7 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         const originalMinutes = now.getMinutes() + t;
         const originalHour = String(((parseInt(now.getMinutes()> 57.5 ? now.getHours() +1 : now.getHours()) + parseInt(originalMinutes/60))));
         const originalDay = now.getDate() + parseInt((originalHour)/24);
-        const originalMonth = now.getMonth() + 1 + (originalDay > monthLengths[now.getMonth() + 1] ? 1 : 0);
+        const originalMonth = now.getMonth() + 1 + (originalDay > monthLengths[now.getMonth() ] ? 1 : 0);
 
         const minutes = (Math.round(parseInt(originalMinutes) / 5) * 5) % 60; // round to nearest 5 minutes
         const hour = originalHour%24;
