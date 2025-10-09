@@ -43,7 +43,7 @@
     <div id="time-options"> <!-- time sections go in here -->
         <p>loading data... &#40This may take up to 30 seconds&#41</p>
     </div>
-    <div id="day-options"></div>
+    <div class = "day-container" id="day-options"></div>
     <p class = footer>The Energy Availability is a value from 0 to 100 that indicates how 
         much energy is currently available on the power grid. A higher score 
         means more clean energy is available for use—an ideal time to run appliances 
@@ -90,9 +90,7 @@ async function fetchAndGetCsvString() {
     console.error('Error:', error);
   }
 }
-
 const colorRange = 1.7;
-const boxesOnScreen = 10; // Number of hour boxes to display
 (async () => {
   try {
 
@@ -115,8 +113,6 @@ const boxesOnScreen = 10; // Number of hour boxes to display
     }
     series.push(obj);
     console.log(series);
-
-
     //Make current energy avaliability circle
     const currentEnergy = document.getElementById("current-energy");
     const circle = document.createElement("div");
@@ -142,8 +138,11 @@ const boxesOnScreen = 10; // Number of hour boxes to display
 
     //Make hour boxes
     const timeOptions = document.getElementById("time-options");
+    const hourContainer = document.createElement("div");
+    hourContainer.classList.add("hour-container")
     const hours = [];
     const numHours = 23-parseInt(now.getHours()) + 6*24;
+    const boxesOnScreen = numHours
     for (let i = 0; i < numHours; i++){
 
         const dateString = findDateStamp(i*60 - now.getMinutes() + 5);        
@@ -155,7 +154,6 @@ const boxesOnScreen = 10; // Number of hour boxes to display
     }
     console.log(hours);
     timeOptions.innerHTML = ""; 
-
     for (let i = 0; i < parseInt(boxesOnScreen); i++){
         const hourBox = document.createElement("button");
         hourBox.className = "hour";
@@ -173,10 +171,12 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         hourBox.appendChild(circle);
 
         
-        timeOptions.appendChild(hourBox);
+        hourContainer.appendChild(hourBox);
     }
+
+    timeOptions.appendChild(hourContainer)
     console.log("Hours: " + hours.length);
-    renderHours(0, hours); // Render the first set of hours
+    renderHours(0, hours); 
 
 
     // Day options
@@ -237,10 +237,18 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         dayBox.appendChild(dayLowText);
 
         dayBox.onclick = function() {
-            const index = (parseInt(document.getElementsByClassName("first-hour")[0].getAttribute("index"))+parseInt(now.getHours()))%24;
+            myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
+            console.log(myIndex.getBoundingClientRect().left)
+            const index = i*24 + (parseInt(myIndex.getAttribute("index")))%24;
             console.log("Index: " + (index));
             console.log("Hour index: " + (i*24)%24);
-            renderHours(i*24-now.getHours()>=0 ? (i*24-now.getHours()) + index : 0, hours);
+            Array.from(document.getElementsByClassName("hour")).forEach(function(i){
+                if (i.getAttribute("index") == index){
+                    console.log(i.getBoundingClientRect().left + hourContainer.scrollLeft)
+                    hourContainer.scrollTo({left: i.getBoundingClientRect().left + hourContainer.scrollLeft-4.5});
+                }
+            })
+            highlightCorrectDay(parseInt(index))
         };
 
         dayOptions.appendChild(dayBox);
@@ -289,6 +297,7 @@ const boxesOnScreen = 10; // Number of hour boxes to display
      */
     function findDateStamp(t){ 
         const now = new Date();
+        
         const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
         const originalMinutes = now.getMinutes() + t;
@@ -308,19 +317,14 @@ const boxesOnScreen = 10; // Number of hour boxes to display
         return dateString;  
     }
 
+
     function renderHours(idealHourIndex, hours){
         const now = new Date();
-
-        var hourIndex;
+        
+        var hourIndex = idealHourIndex;
         console.log("Num " + String(23-parseInt(now.getHours()) + 6*24))
-        if (idealHourIndex > 23-parseInt(now.getHours()) + 6*24 - boxesOnScreen) {
-            hourIndex = hours.length - boxesOnScreen; 
-        } else if (idealHourIndex < 0) {
-            hourIndex = 0;
-        } else {
-            hourIndex = idealHourIndex;
-        }
 
+        
         const timeOptions = document.getElementById("time-options");
         const hourBoxes = document.querySelectorAll(".hour");
         
@@ -356,47 +360,21 @@ const boxesOnScreen = 10; // Number of hour boxes to display
                 hourBox.appendChild(priceTag);
             } 
         }
-        if (timeOptions.querySelector(".back")) {
-            timeOptions.removeChild(timeOptions.querySelector(".back")); 
-        }
-        if (timeOptions.querySelector(".next")) {
-            timeOptions.removeChild(timeOptions.querySelector(".next")); 
-        }
-        if (hourIndex < (parseInt(hours.length)-12)) {
-            const nextButton = document.createElement("button");
-            nextButton.className = "next arrow-box";
-            const nextArrow = document.createElement("img");
-            nextArrow.src = "next-arrow.png";
-            nextArrow.className = "next-arrow";
-            nextButton.appendChild(nextArrow);
-            timeOptions.appendChild(nextButton);
-            nextButton.onclick = function() {
-                renderHours((hourIndex<(parseInt(hours.length)-boxesOnScreen*2-1) ? parseInt(hourIndex) + parseInt(boxesOnScreen) : (parseInt(hours.length)-boxesOnScreen)), hours);
-            };
-        }
-        if (hourIndex > 0) {
-            const backButton = document.createElement("button");
-            backButton.className = "back arrow-box";
-            const backArrow = document.createElement("img");
-            backArrow.src = "next-arrow.png";
-            backArrow.className = "back-arrow";
-            backButton.appendChild(backArrow);
-            timeOptions.insertBefore(backButton, timeOptions.firstChild);
-            backButton.onclick = function() {
-                renderHours((hourIndex>(boxesOnScreen*2-1) ? parseInt(hourIndex) - parseInt(boxesOnScreen) : (0)), hours);            
-            };
-        }
+        highlightCorrectDay(hourIndex)        
+    }
+
+    function highlightCorrectDay(hourIndex){
+        const now = new Date();
         const days = document.getElementsByClassName("day");
         const day = parseInt((hourIndex + now.getHours())/24);
-        console.log(day);
+        console.log("Day:" + day);
         for (let i = 0; i < document.getElementsByClassName("day").length; i++) {
             if (parseInt(i) === parseInt(day)) {
                 days[i].classList.add("selected");
             } else {
                 days[i].classList.remove("selected");
             }
-        }
-        
+        }    
     }
 
 
