@@ -1,5 +1,5 @@
 :root {
-  --scale: calc(1/17);
+  --scale: calc(3/4);
 }
 /* Default classes */
 body {
@@ -14,7 +14,7 @@ a {
 
 h1 {  
     font-weight: bold;
-    font-size: calc(50vw * var(--scale));
+    font-size: calc(50px * var(--scale));
     text-align: center;
     margin-bottom: 10px;
 }
@@ -25,10 +25,10 @@ h1 {
     color: black;
 }
 h2 {
-    font-size: calc(22vw * var(--scale));
+    font-size: calc(22px * var(--scale));
     color: black;
-    margin: calc(10vw * var(--scale));
-    margin-left: calc(10vw * var(--scale));
+    margin: calc(10px * var(--scale));
+    margin-left: calc(10px * var(--scale));
     /*text-transform: uppercase;*/
     font-weight: bold;
 }
@@ -39,138 +39,145 @@ button {
 /* Current Energy Available */
 .section {
     background-color: #eaeaea;
-    padding: calc(12vw * var(--scale));
+    padding: calc(12px * var(--scale));
     border-radius: 10%;
-    width: calc(128vw * var(--scale));
+    width: calc(128px * var(--scale));
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: calc(26vw * var(--scale));
+    font-size: calc(26px * var(--scale));
 
 }    
 .circle {
     border-radius: 50%;
-    width: calc(102vw * var(--scale));
-    height: calc(102vw * var(--scale));
-    font-size: calc(50vw * var(--scale));   
+    width: calc(102px * var(--scale));
+    height: calc(102px * var(--scale));
+    font-size: calc(50px * var(--scale));   
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: calc(8vw * var(--scale));
+    margin: calc(8px * var(--scale));
 }        
 
 /* Hour options */
 .hour {
     background-color: #eaeaea;
-    padding: calc(12vw * var(--scale));
+    padding: calc(12px * var(--scale));
     border-radius: 10%;
-    width: calc(120vw * var(--scale));
+    width: calc(120px * var(--scale));
     aspect-ratio: 120/140;    
-    margin: calc(4.5vw * var(--scale));
+    margin: calc(4.5px * var(--scale));
     display: inline-flex;
-    font-size: calc(26vw * var(--scale));
+    font-size: calc(26px * var(--scale));
     justify-content: start;
     align-items: center;
     flex-direction: column;
-    margin-top: calc(16vw * var(--scale));
+    margin-top: calc(16px * var(--scale));
 }    
 .first-hour {
-    margin-left: calc(14vw * var(--scale));
+    margin-left: calc(14px * var(--scale));
 }    
-
+.hour-container{
+    overflow: auto;
+    white-space: nowrap;
+}
 .small-circle {
     border-radius: 50%;
-    width: calc(60vw * var(--scale));
-    height: calc(60vw * var(--scale));
-    font-size: calc(26vw * var(--scale));
+    width: calc(60px * var(--scale));
+    height: calc(60px * var(--scale));
+    font-size: calc(26px * var(--scale));
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: calc(12vw * var(--scale));
+    margin: calc(12px * var(--scale));
 }    
 .price-tag{
-    width: calc(22vw * var(--scale));
-    height: calc(22vw * var(--scale));
+    width: calc(22px * var(--scale));
+    height: calc(22px * var(--scale));
     justify-content: flex-end;
     align-items: center;
     flex-direction: column;
 }    
 .arrow-box{
-    padding: calc(12vw * var(--scale));
-    width: calc(40vw * var(--scale));
+    padding: calc(12px * var(--scale));
+    width: calc(40px * var(--scale));
     aspect-ratio: 40/140;    
-    margin: calc(4.5vw * var(--scale));
+    margin: calc(4.5px * var(--scale));
     display: inline-flex;
-    font-size: calc(22vw * var(--scale));
+    font-size: calc(22px * var(--scale));
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: calc(16vw * var(--scale));
+    margin-top: calc(16px * var(--scale));
     vertical-align: top;
     position: relative;
 }
 .next{
     background-image: linear-gradient(to right, rgba(244, 244, 244, 0), rgba(244, 244, 244, 50),rgba(244, 244, 244, 100),rgba(244, 244, 244, 100), rgba(244, 244, 244, 100));
-    margin-left: calc(-30vw * var(--scale));
+    margin-left: calc(-30px * var(--scale));
 }
 .next-arrow{
-    width: calc(40vw * var(--scale));
+    width: calc(40px * var(--scale));
     height: auto;
 }
 
 .back-arrow{
-    width: calc(40vw * var(--scale));
+    width: calc(40px * var(--scale));
     height: auto;
     transform: scaleX(-1);
 }
 .back{
     background-image: linear-gradient(to left, rgba(244, 244, 244, 0), rgba(244, 244, 244, 50),rgba(244, 244, 244, 100),rgba(244, 244, 244, 100), rgba(244, 244, 244, 100));
-    margin-right: calc(-30vw * var(--scale));
+    margin-right: calc(-30px * var(--scale));
 }
 
 
 /*Day Options*/
+.day-container{
+    overflow: auto;
+    white-space: nowrap;
+}
 .day {
     background-color: #eaeaea;
-    padding: calc(18vw * var(--scale));
+    padding: calc(18px * var(--scale));
     border-radius: 10%;
-    width: calc(176vw * var(--scale));
+    width: calc(176px * var(--scale));
     aspect-ratio: 176/230;    
-    margin: calc(5.5vw * var(--scale));
+    margin: calc(5.5px * var(--scale));
     display: inline-flex;
-    font-size: calc(30vw * var(--scale));
+    font-size: calc(30px * var(--scale));
     justify-content: start;
     align-items: center;
     flex-direction: column;
-    margin-top: calc(16vw * var(--scale));
-    box-shadow: 0px 0px calc(10vw * var(--scale)) 0px rgba(0, 0, 0, 0.5);
+    margin-top: calc(16px * var(--scale));
+    box-shadow: 0px 0px calc(10px * var(--scale)) 0px rgba(0, 0, 0, 0.5);
 } 
 .first-day {
-    margin-left: calc(14vw * var(--scale));
+    margin-left: calc(14px * var(--scale));
 }  
 .day-circle {
     border-radius: 50%;
-    width: calc(102vw * var(--scale));
-    height: calc(102vw * var(--scale));
+    width: calc(102px * var(--scale));
+    height: calc(102px * var(--scale));
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: calc(20vw * var(--scale));
-    font-size: calc(48vw * var(--scale));
+    margin: calc(20px * var(--scale));
+    font-size: calc(48px * var(--scale));
 }  
 .day-high{
-    font-size: calc(36vw * var(--scale));
+    font-size: calc(36px * var(--scale));
     font-weight: bold;
     float: left;
     display: inline;
 }
 .day-low{
-    font-size: calc(30vw * var(--scale));
+    font-size: calc(30px * var(--scale));
     font-weight: normal;
     float: right;
     display: inline;
@@ -182,13 +189,13 @@ button {
 }    
 /* Footer */
 .footer {
-    width: calc(544vw * var(--scale));
-    font-size: calc(14vw * var(--scale));
+    width: calc(544px * var(--scale));
+    font-size: calc(14px * var(--scale));
     align-self: center;
     text-align: justify ;
     text-align-last: center;
     margin: 0 auto;
-    margin-top: calc(16vw * var(--scale));
+    margin-top: calc(16px * var(--scale));
 }
 /*Header*/
 .box-text-indent {
