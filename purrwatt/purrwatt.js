@@ -248,7 +248,7 @@ const colorRange = 1.7;
     timeOptions.appendChild(hourContainer)
     console.log("Hours: " + hours.length);
     renderHours(0, hours); 
-    hourContainer.addEventListener('scrollend', function() {
+    hourContainer.addEventListener('scroll', function() {
         const now = new Date();
         console.log('Scrolling has stopped.');
         let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
