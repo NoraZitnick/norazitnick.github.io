@@ -53,153 +53,15 @@ const colorRange = 1.7;
         // Add the object to the series array
     }
     series.push(obj);
-    console.log(series);
-    //Make current energy avaliability circle
-    const currentEnergy = document.getElementById("current-energy");
-    const circle = document.createElement("div");
-    circle.className = "circle";
-    const now = new Date();
-    const dateString = findDateStamp(0); 
-    console.log(dateString);
-    console.log(series[0][dateString]);
-    
-    const goodness = String(series[0][dateString]);
-    circle.style.backgroundColor = "hsl(" + String(series[0][dateString] * parseInt(colorRange)) + ", 90%, 50%)";
-    
-    circle.appendChild(document.createTextNode(goodness));
-    currentEnergy.appendChild(circle);
-
-    currentEnergy.append(String(goodness > 90 ? "Best"
-    : goodness > 75 ? "Very High"
-    : goodness > 60 ? "High"
-    : goodness >  45? "Moderate" 
-    : goodness > 30 ? "Low"
-    : goodness > 15 ? "Very Low"
-    : "Avoid Use"));
-
-    //Make hour boxes
-    const timeOptions = document.getElementById("time-options");
-    const hourContainer = document.createElement("div");
-    hourContainer.classList.add("hour-container")
-    const hours = [];
-    const numHours = 23-parseInt(now.getHours()) + 6*24;
-    const boxesOnScreen = numHours
-    for (let i = 0; i < numHours; i++){
-
-        const dateString = findDateStamp(i*60 - now.getMinutes() + 5);        
-        const obj = {};
-
-        console.log(dateString + " " + i);
-        obj[dateString] = series[0][dateString];
-        hours.push(obj);
-    }
-    console.log(hours);
-    timeOptions.innerHTML = ""; 
-    for (let i = 0; i < parseInt(boxesOnScreen); i++){
-        const hourBox = document.createElement("button");
-        hourBox.className = "hour";
-        if (i === 0) {
-            hourBox.classList.add("first-hour");
+    makeEnergyCircle(series);
+    makeHourOptions(series);
+    makeDayOptions(series);
+    } else {
+        console.warn('CSV string is empty or undefined.');
         }
-        const timeText = document.createElement("p");
-        hourBox.appendChild(timeText);
-        hourBox.setAttribute("index", i);
-        
-        
-        //Circle
-        const circle = document.createElement("div");
-        circle.className = "small-circle";
-        hourBox.appendChild(circle);
-
-        
-        hourContainer.appendChild(hourBox);
-    }
-
-    timeOptions.appendChild(hourContainer)
-    console.log("Hours: " + hours.length);
-    renderHours(0, hours); 
-
-
-    // Day options
-    const dayOptions = document.getElementById("day-options");
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    for (let i = 0; i < 7; i++) {
-        const dayBox = document.createElement("div");
-        dayBox.className = "day";
-        const timeText = document.createElement("p");
-        if (i === 0) {
-            dayBox.classList.add("first-day");
-            dayBox.classList.add("selected");
-            timeText.textContent = "Today";
-        } else{
-            const dayOfWeekNumber = now.getDay() + i;
-            timeText.textContent = daysOfWeek[dayOfWeekNumber%7];
-        }
-        dayBox.appendChild(timeText);
-        //Circle
-        let dayHigh = 0;
-        for (let j = 0; j < (24*60); j+=5){
-            const dateString = findDateStamp(j - (now.getMinutes() + now.getHours() * 60) + (i * 24 * 60));
-            if (series[0][dateString] > dayHigh) {
-                dayHigh = series[0][dateString];
-            }
-        }
-        const circle = document.createElement("div");
-        circle.className = "day-circle";
-        circle.style.backgroundColor = "hsl(" + dayHigh *parseInt(colorRange) + ", 90%, 50%)";
-        circle.textContent = String(dayHigh);
-        dayBox.appendChild(circle);
-        // Add the day high
-        const dayHighText = document.createElement("p");
-        dayHighText.className = "day-high";
-        dayHighText.textContent = String(dayHigh);
-        dayBox.appendChild(dayHighText);
-
-        // Add the day low
-        let dayLow = 100;
-        for (let j = 0; j < (24*60); j+=5){
-            const dateString = findDateStamp(j - (now.getMinutes() + now.getHours() * 60) + (i * 24 * 60));
-            if (series[0][dateString] < dayLow) {
-                dayLow = series[0][dateString];
-            }
-        }
-        const dayLowText = document.createElement("p");
-        dayLowText.className = "day-low";
-        dayLowText.textContent = "Low: " + String(dayLow);
-        
-        const container = document.createElement("div");
-        container.style.justifyContent = "space-between";
-        container.style.display = "flex";
-        container.style.width = "100%";
-        
-        container.appendChild(dayHighText);
-        container.appendChild(dayLowText);
-        dayBox.appendChild(dayLowText);
-
-        dayBox.onclick = function() {
-            myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
-            console.log(myIndex.getBoundingClientRect().left)
-            const index = i*24 + (parseInt(myIndex.getAttribute("index")))%24;
-            console.log("Index: " + (index));
-            console.log("Hour index: " + (i*24)%24);
-            Array.from(document.getElementsByClassName("hour")).forEach(function(i){
-                if (i.getAttribute("index") == index){
-                    console.log(i.getBoundingClientRect().left + hourContainer.scrollLeft)
-                    hourContainer.scrollTo({left: i.getBoundingClientRect().left + hourContainer.scrollLeft-4.5});
-                }
-            })
-            highlightCorrectDay(parseInt(index)-now.getHours())
-        };
-
-        dayOptions.appendChild(dayBox);
-    }
-} else {
-    console.warn('CSV string is empty or undefined.');
-    }
-  } catch (error) {
-    console.error('Error:', error);  
-  }  
+    } catch (error) {
+        console.error('Error:', error);  
+    }  
 })();  
 
 
@@ -264,7 +126,6 @@ const colorRange = 1.7;
         const now = new Date();
         
         var hourIndex = idealHourIndex;
-        console.log("Num " + String(23-parseInt(now.getHours()) + 6*24))
 
         
         const timeOptions = document.getElementById("time-options");
@@ -317,4 +178,153 @@ const colorRange = 1.7;
                 days[i].classList.remove("selected");
             }
         }    
+    }
+
+    function makeEnergyCircle(series){
+        //Make current energy avaliability circle
+    const currentEnergy = document.getElementById("current-energy");
+    const circle = document.createElement("div");
+    circle.className = "circle";
+    const now = new Date();
+    const dateString = findDateStamp(0); 
+    console.log(dateString);
+    console.log(series[0][dateString]);
+    
+    const goodness = String(series[0][dateString]);
+    circle.style.backgroundColor = "hsl(" + String(series[0][dateString] * parseInt(colorRange)) + ", 90%, 50%)";
+    
+    circle.appendChild(document.createTextNode(goodness));
+    currentEnergy.appendChild(circle);
+
+    currentEnergy.append(String(goodness > 90 ? "Best"
+    : goodness > 75 ? "Very High"
+    : goodness > 60 ? "High"
+    : goodness >  45? "Moderate" 
+    : goodness > 30 ? "Low"
+    : goodness > 15 ? "Very Low"
+    : "Avoid Use"));
+    }
+
+    function makeHourOptions(series){
+    const now = new Date();
+    //Make hour boxes
+    const timeOptions = document.getElementById("time-options");
+    const hourContainer = document.createElement("div");
+    hourContainer.classList.add("hour-container")
+    const hours = [];
+    const numHours = 23-parseInt(now.getHours()) + 6*24;
+    const boxesOnScreen = numHours
+    for (let i = 0; i < numHours; i++){
+
+        const dateString = findDateStamp(i*60 - now.getMinutes() + 5);        
+        const obj = {};
+
+        console.log(dateString + " " + i);
+        obj[dateString] = series[0][dateString];
+        hours.push(obj);
+    }
+    console.log(hours);
+    timeOptions.innerHTML = ""; 
+    for (let i = 0; i < parseInt(boxesOnScreen); i++){
+        const hourBox = document.createElement("button");
+        hourBox.className = "hour";
+        if (i === 0) {
+            hourBox.classList.add("first-hour");
+        }
+        const timeText = document.createElement("p");
+        hourBox.appendChild(timeText);
+        hourBox.setAttribute("index", i);
+        
+        
+        //Circle
+        const circle = document.createElement("div");
+        circle.className = "small-circle";
+        hourBox.appendChild(circle);
+
+        
+        hourContainer.appendChild(hourBox);
+    }
+
+    timeOptions.appendChild(hourContainer)
+    console.log("Hours: " + hours.length);
+    renderHours(0, hours); 
+    hourContainer.addEventListener('scrollend', function() {
+        console.log('Scrolling has stopped.');
+        let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
+        console.log("My index: " + myIndex);
+        highlightCorrectDay(parseInt(myIndex.getAttribute("index"))-now.getHours());
+        
+    });
+}
+function makeDayOptions(series){
+    const now = new Date();
+    // Day options
+    const dayOptions = document.getElementById("day-options");
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    for (let i = 0; i < 7; i++) {
+        const dayBox = document.createElement("div");
+        dayBox.className = "day";
+        const timeText = document.createElement("p");
+        if (i === 0) {
+            dayBox.classList.add("first-day");
+            dayBox.classList.add("selected");
+            timeText.textContent = "Today";
+        } else{
+            const dayOfWeekNumber = now.getDay() + i;
+            timeText.textContent = daysOfWeek[dayOfWeekNumber%7];
+        }
+        dayBox.appendChild(timeText);
+        
+        //Circle
+        let dayHigh = 0;
+        for (let j = 0; j < (24*60); j+=5){
+            const dateString = findDateStamp(j - (now.getMinutes() + now.getHours() * 60) + (i * 24 * 60));
+            if (series[0][dateString] > dayHigh) {
+                dayHigh = series[0][dateString];
+            }
+        }
+        const circle = document.createElement("div");
+        circle.className = "day-circle";
+        circle.style.backgroundColor = "hsl(" + dayHigh *parseInt(colorRange) + ", 90%, 50%)";
+        circle.textContent = String(dayHigh);
+        dayBox.appendChild(circle);
+        // Add the day high
+        const dayHighText = document.createElement("p");
+        dayHighText.className = "day-high";
+        dayHighText.textContent = String(dayHigh);
+        dayBox.appendChild(dayHighText);
+
+        // Add the day low
+        let dayLow = 100;
+        for (let j = 0; j < (24*60); j+=5){
+            const dateString = findDateStamp(j - (now.getMinutes() + now.getHours() * 60) + (i * 24 * 60));
+            if (series[0][dateString] < dayLow) {
+                dayLow = series[0][dateString];
+            }
+        }
+        const dayLowText = document.createElement("p");
+        dayLowText.className = "day-low";
+        dayLowText.textContent = "Low: " + String(dayLow);
+        
+        const container = document.createElement("div");
+        container.style.justifyContent = "space-between";
+        container.style.display = "flex";
+        container.style.width = "100%";
+        
+        container.appendChild(dayHighText);
+        container.appendChild(dayLowText);
+        dayBox.appendChild(dayLowText);
+
+        dayBox.onclick = function() {
+            let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
+            const index = i*24 + (parseInt(myIndex.getAttribute("index")))%24;
+            const hourContainer = document.getElementsByClassName("hour-container")[0];
+            const p = Array.from(document.getElementsByClassName("hour"))[index]
+            hourContainer.scrollTo({left: p.getBoundingClientRect().left + hourContainer.scrollLeft-4.5});
+            highlightCorrectDay(parseInt(index)-now.getHours())
+        };
+
+            dayOptions.appendChild(dayBox);
+        }
     }
