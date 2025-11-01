@@ -252,7 +252,7 @@ const colorRange = 1.7;
         console.log('Scrolling has stopped.');
         let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
         console.log("My index: " + myIndex);
-        highlightCorrectDay(parseInt(myIndex.getAttribute("index"))-now.getHours());
+        highlightCorrectDay(parseInt(myIndex.getAttribute("index")));
         
     });
 }
