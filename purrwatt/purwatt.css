@@ -7,6 +7,11 @@ body {
     background-color: #f4f4f4;
 }
 
+.loading {
+    font-size: calc(22px * var(--scale));
+    text-align: left;
+    margin-left: calc(20px * var(--scale));
+}
 
 a {
     text-decoration: none
