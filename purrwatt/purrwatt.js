@@ -249,10 +249,11 @@ const colorRange = 1.7;
     console.log("Hours: " + hours.length);
     renderHours(0, hours); 
     hourContainer.addEventListener('scrollend', function() {
+        const now = new Date();
         console.log('Scrolling has stopped.');
         let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
-        console.log("My index: " + myIndex);
-        highlightCorrectDay(parseInt(myIndex.getAttribute("index")));
+        console.log("My index: " + (parseInt(myIndex.getAttribute("index"))-now.getHours()));
+        highlightCorrectDay(parseInt(myIndex.getAttribute("index"))-now.getHours());
         
     });
 }
@@ -322,6 +323,7 @@ function makeDayOptions(series){
             const hourContainer = document.getElementsByClassName("hour-container")[0];
             const p = Array.from(document.getElementsByClassName("hour"))[index]
             hourContainer.scrollTo({left: p.getBoundingClientRect().left + hourContainer.scrollLeft-4.5});
+            console.log("My index: " + (parseInt(index)-now.getHours()));
             highlightCorrectDay(parseInt(index)-now.getHours())
         };
 
