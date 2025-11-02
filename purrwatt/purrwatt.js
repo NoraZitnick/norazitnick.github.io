@@ -65,17 +65,6 @@ const colorRange = 1.7;
 })();  
 
 
-    function findPrice(t) { // finds the dollar signs of a certain time
-        let cost;
-        if (t%24 >= 16 && t%24 <= 21) {
-            cost = "$$$"
-        } else {
-            cost = "  $"
-        }
-        return cost;
-    }
-
-
     function find12hr(t) { // converts 24 hr time into 12 hr time
         t = t%24;
         let output = t%12;
@@ -253,7 +242,7 @@ const colorRange = 1.7;
         console.log('Scrolling has stopped.');
         let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
         console.log("My index: " + (parseInt(myIndex.getAttribute("index"))-now.getHours()));
-        highlightCorrectDay(parseInt(myIndex.getAttribute("index"))-now.getHours());
+        highlightCorrectDay(parseInt(myIndex.getAttribute("index")));
         
     });
 }
@@ -318,13 +307,28 @@ function makeDayOptions(series){
         dayBox.appendChild(dayLowText);
 
         dayBox.onclick = function() {
+            const now = new Date();
             let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
-            const index = i*24 + (parseInt(myIndex.getAttribute("index")))%24;
+            var index = i*24 + (parseInt(myIndex.getAttribute("index")) + now.getHours())%24 - now.getHours();
             const hourContainer = document.getElementsByClassName("hour-container")[0];
-            const p = Array.from(document.getElementsByClassName("hour"))[index]
-            hourContainer.scrollTo({left: p.getBoundingClientRect().left + hourContainer.scrollLeft-4.5});
-            console.log("My index: " + (parseInt(index)-now.getHours()));
-            highlightCorrectDay(parseInt(index)-now.getHours())
+
+            if (index > 23-parseInt(now.getHours()) + 6*24 - boxesOnScreen) {
+                var boxesOnScreen = 0;
+                const elements = Array.from(document.getElementsByClassName("class"));
+                for (var hour in elements){
+                    if (hour.getBoundingClientRect().left > 0 && hour.getBoundingClientRect().left < hourContainer.getBoundingClientRect().left){
+                        boxesOnScreen ++;
+                    }
+                }
+                hourContainer.scrollTo(hourContainer.scrollBy({left: hourContainer.scrollWidth}));
+                index = 23-parseInt(now.getHours()) + 6*24 - boxesOnScreen;
+            } else {
+                if (index < 0) {
+                    index = 0;
+                }
+                const p = Array.from(document.getElementsByClassName("hour"))[index];
+                hourContainer.scrollTo({left: p.getBoundingClientRect().left + hourContainer.scrollLeft-4.5});
+            }
         };
 
             dayOptions.appendChild(dayBox);
