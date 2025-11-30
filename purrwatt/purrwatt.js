@@ -232,6 +232,7 @@ const colorRange = 1.7;
 
         
         hourContainer.appendChild(hourBox);
+        
     }
 
     timeOptions.appendChild(hourContainer)
