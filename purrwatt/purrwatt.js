@@ -56,6 +56,7 @@ const colorRange = 1.7;
     makeEnergyCircle(series);
     makeHourOptions(series);
     makeDayOptions(series);
+    initializeReminder();
     } else {
         console.warn('CSV string is empty or undefined.');
         }
@@ -151,6 +152,7 @@ const colorRange = 1.7;
                 priceTag.src = "dollar-sign.png";
                 hourBox.appendChild(priceTag);
             } 
+            hourBox.addEventListener('click',  function() {makeReminderVisible(circle.textContent, parseInt((i+now.getHours())/24), timeText.textContent);});
         }
         highlightCorrectDay(hourIndex)        
     }
@@ -159,7 +161,6 @@ const colorRange = 1.7;
         const now = new Date();
         const days = document.getElementsByClassName("day");
         const day = parseInt((hourIndex + now.getHours())/24);
-        console.log("Day:" + day);
         for (let i = 0; i < document.getElementsByClassName("day").length; i++) {
             if (parseInt(i) === parseInt(day)) {
                 days[i].classList.add("selected");
@@ -228,9 +229,7 @@ const colorRange = 1.7;
         //Circle
         const circle = document.createElement("div");
         circle.className = "small-circle";
-        hourBox.appendChild(circle);
-
-        
+        hourBox.appendChild(circle);        
         hourContainer.appendChild(hourBox);
         
     }
@@ -240,18 +239,17 @@ const colorRange = 1.7;
     renderHours(0, hours); 
     hourContainer.addEventListener('scroll', function() {
         const now = new Date();
-        console.log('Scrolling has stopped.');
         let myIndex = Array.from(document.getElementsByClassName("hour")).filter((i)=>(i.getBoundingClientRect().left+i.getBoundingClientRect().right)/2>=0)[0];
-        console.log("My index: " + (parseInt(myIndex.getAttribute("index"))-now.getHours()));
         highlightCorrectDay(parseInt(myIndex.getAttribute("index")));
         
     });
 }
+const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 function makeDayOptions(series){
     const now = new Date();
     // Day options
     const dayOptions = document.getElementById("day-options");
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     for (let i = 0; i < 7; i++) {
         const dayBox = document.createElement("div");
@@ -335,3 +333,94 @@ function makeDayOptions(series){
             dayOptions.appendChild(dayBox);
         }
     }
+function makeReminderVisible(energy, day, time){
+    const reminderContainer = document.getElementById("reminder-container");
+    const reminderCircle = document.getElementById("reminder-circle");
+    const reminderDay = document.getElementById("reminder-day");
+    const reminderHour = document.getElementById("reminder-hour");
+    reminderHour.textContent = time;
+    console.log(reminderCircle.textContent + "Day: " + day);
+    reminderCircle.textContent = energy;
+    reminderCircle.style.backgroundColor = "hsl(" + energy *parseInt(colorRange) + ", 90%, 50%)";
+    reminderDay.textContent = daysOfWeek[day];
+    reminderContainer.style.display = "flex";
+}
+
+function initializeReminder(){
+    const reminderCancel = document.getElementById("reminder-cancel");
+    reminderCancel.onclick = function() {
+        const reminderContainer = document.getElementById("reminder-container");
+        reminderContainer.style.display = "none";
+        const button = document.getElementById("reminder-button");
+        button.textContent = "Choose Appliance";
+        button.style.backgroundColor = "#a3a3a3";
+        button.style.color = "#f4f4f4";
+        const reminderConfirm = document.getElementById("reminder-confirm");
+        reminderConfirm.classList.remove("reminder-confirm-selected");
+        reminderConfirm.classList.add("reminder-confirm");
+    }
+    document.querySelectorAll(".dropdown-content a").forEach(item => {
+    item.addEventListener("click", event => {
+        const selected = event.target.textContent;
+        const button = document.getElementById("reminder-button");
+        button.textContent = selected;
+        button.style.backgroundColor = "#f4f4f4";
+        button.style.color = "#a3a3a3";
+        const reminderConfirm = document.getElementById("reminder-confirm");
+        reminderConfirm.classList.remove("reminder-confirm");
+        reminderConfirm.classList.add("reminder-confirm-selected");
+    });
+    });
+    const confirmButton = document.getElementById("reminder-confirm");
+    confirmButton.addEventListener("click", function() {
+        if (confirmButton.classList.contains("reminder-confirm-selected")) {
+            const reminderContainer = document.getElementById("reminder-container");
+            reminderContainer.style.display = "none";
+            subscribeToPush();
+        }
+    });
+}
+async function registerSW() {
+    if (!("serviceWorker" in navigator)) return;
+
+    const reg = await navigator.serviceWorker.register("/purrwatt/service-worker.js");
+    console.log("Service worker registered:", reg);
+}
+
+registerSW();
+
+async function subscribeToPush() {
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") return alert("Notifications blocked");
+
+    const sw = await navigator.serviceWorker.ready;
+
+    const subscription = await sw.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: "BLZeHawWnSB4DNsIzrVFxrP_qxEYBIgGSjYKUB2-xxJJmFUuMzsSLTLNxnPnz-hPvPaDEFnYPEzYZPGk328Ssm0"
+    });
+    // Send subscription to backend
+    if (!localStorage.getItem("userId")) {
+        localStorage.setItem("userId", "user-" + crypto.randomUUID());
+    }
+    await fetch("https://caiso-proxy-repo.onrender.com/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: localStorage.getItem("userId"),
+            subscription
+        })
+    });
+
+    console.log("Subscribed:", subscription);
+
+    await fetch("https://caiso-proxy-repo.onrender.com/notify"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        userId: localStorage.getItem("userId"),
+        title: "Hello",
+        body: "Notify"
+    })
+    }
+}

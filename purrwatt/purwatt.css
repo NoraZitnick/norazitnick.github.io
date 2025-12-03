@@ -46,7 +46,7 @@ button {
     background-color: #eaeaea;
     padding: calc(12px * var(--scale));
     border-radius: 10%;
-    width: calc(128px * var(--scale));
+    width: calc(135px * var(--scale));
     margin: auto;
     display: flex;
     justify-content: center;
@@ -254,7 +254,7 @@ select {
     width: 100%;
     height: 100%;
     opacity: 0.5;
-    position: absolute;
+    position: fixed;
     z-index: 2;
     left: 0%;
     top: 0%;
@@ -262,17 +262,17 @@ select {
 .reminder-container {
     width: 100%;
     height: 100%;
-    position: absolute;
-    display: flex;
+    position: fixed;
+    /* display: flex; */
+    display: none;
     align-items: center;
     flex-direction: column;
     z-index: 1;
     left: 0%;
     top: 0%;
-
 }
 .reminder-box {
-    background-color: #eaeaea;
+    background-color: #f4f4f4;
     padding: calc(12px * var(--scale));
     border-radius: calc(30px * var(--scale));
     /* width: calc(300px * var(--scale)); */
@@ -303,21 +303,22 @@ select {
   display: inline-block;
 }
 .dropdown-button {
+    border-style: solid;
+    border-color: #a3a3a3;
     background-color: #a3a3a3;
     border-radius: calc(10px * var(--scale));
     width: calc(300px * var(--scale));
     height: calc(45px * var(--scale));
     font-size: calc(24px * var(--scale));   
-    display: block;
     margin-top: calc(8px * var(--scale));
-    border: none;
-}
-.dropdown-button a {
     color: #f4f4f4;
     padding: calc(0px * var(--scale)) calc(15px * var(--scale));
     text-decoration: none;
     display: block;
+    border-width: calc(4px * var(--scale));
 }
+
+
 .dropdown-content {
     display: none;
     font-size: calc(24px * var(--scale));   
@@ -349,6 +350,7 @@ select {
 
 .reminder-button-container {
     display: inline-flex;
+    width: 100%;
 }
 .reminder-button {
     border-radius: calc(10px * var(--scale));
@@ -359,25 +361,30 @@ select {
     align-items: center;
     flex-direction: column;    
     margin-top: calc(8px * var(--scale));
-    margin-left: calc(8px * var(--scale));
-    margin-right: calc(8px * var(--scale));
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+    border-width: calc(4px * var(--scale));
 }
 .reminder-cancel {
-    border-width: calc(4px * var(--scale));
     border-style: solid;
     border-color: #a3a3a3;
-    background-color: #eaeaea;
+    background-color: #f4f4f4;
     color: #a3a3a3;
-    padding-left: calc(8px * var(--scale));
-    padding-right: calc(8px * var(--scale));
+    min-width: 30%;
 }
 .reminder-confirm {
-    border-width: calc(4px * var(--scale));
     border-style: solid;
     border-color: #159709;
-    background-color: #eaeaea;
+    background-color: #f4f4f4;
     color:  #159709;
-    padding-left: calc(8px * var(--scale));
-    padding-right: calc(8px * var(--scale));
-    
+    min-width: 55%;
+}
+.reminder-confirm-selected {
+    border-style: solid;
+    border-color: #159709;
+    background-color:#159709;
+    color:  #f4f4f4;
+    min-width: 55%;
 }
