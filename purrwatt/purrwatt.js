@@ -411,16 +411,18 @@ async function subscribeToPush() {
             subscription
         })
     });
-
     console.log("Subscribed:", subscription);
-
-    await fetch("https://caiso-proxy-repo.onrender.com/notify"), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
-        title: "Hello",
-        body: "Notify"
-    })
+    await notifyUser(localStorage.getItem("userId"), "PurrWatt Reminder Set!", "We'll notify you when it's a good time to use your appliance.");
+}
+async function notifyUser(userId, title, body) {
+    await fetch("https://caiso-proxy-repo.onrender.com/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId,
+            title,
+            body
+        })
     }
+    );
 }
