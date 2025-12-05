@@ -41,7 +41,7 @@
     
     
     <div id="time-options"> <!-- time sections go in here -->
-        <p class = "loading">loading data... &#40This may take up to 30 seconds&#41</p>
+        <p class = "loading">loading data... &#40This may take up to a minute&#41</p>
     </div>
     <div class = "day-container" id="day-options"></div>
     <p class = footer>The Energy Availability is a value from 0 to 100 that indicates how 
@@ -50,13 +50,30 @@
         or charge devices. Lower scores suggest higher demand or less renewable energy, 
         so and more gas generators to keep up with demand—a time to conserve energy and 
         not run appliances.</p>
-
-
-
-
-
+    <div class="reminder-container" id = "reminder-container">
+        <div class = "reminder-background"></div>
+        <div class = "reminder-box" id = "reminder-box">
+            <p id = "reminder-day">Wednesday at 12pm</p>
+            <div class = "reminder-circle" id = "reminder-circle" style = "background-color: green">80</div>
+            <p id = "reminder-hour">2pm</p>
+            <div class="dropdown">
+                <button class="dropdown-button" id = "reminder-button"> Choose Appliance </button>
+                <div class="dropdown-content">
+                    <a>Dishwasher</a>
+                    <a>Charge Car</a>
+                    <a>Laundry</a>
+                </div>
+            </div>
+            <div class="reminder-button-container">
+                <div class="reminder-button reminder-cancel" id = "reminder-cancel">Cancel</div>
+                <div class="reminder-button reminder-confirm" id = "reminder-confirm">Schedule Reminder</div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div> 
 <script src="purrwatt.js"></scriptsrc></script>
-    
+
 </body>
 
 </html>
