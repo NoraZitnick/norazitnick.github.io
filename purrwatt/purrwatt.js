@@ -364,6 +364,13 @@ function makeReminderVisible(energy, day, time){
     reminderCircle.style.backgroundColor = "hsl(" + energy *parseInt(colorRange) + ", 90%, 50%)";
     reminderDay.textContent = day == new Date().getDay() ? "Today" : daysOfWeek[day];
     reminderContainer.style.display = "flex";
+    const button = document.getElementById("reminder-button");
+    button.textContent = "Choose Appliance";
+    button.style.backgroundColor = "#a3a3a3";
+    button.style.color = "#f4f4f4";
+    const reminderConfirm = document.getElementById("reminder-confirm");
+    reminderConfirm.classList.remove("reminder-confirm-selected");
+    reminderConfirm.classList.add("reminder-confirm");
 }
 
 function initializeReminder(){
