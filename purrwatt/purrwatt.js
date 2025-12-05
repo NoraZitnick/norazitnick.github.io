@@ -84,6 +84,26 @@ const colorRange = 1.7;
         }
         return output + meridiem
      }
+
+    function find24hr(t) { // converts 12 hr time into 24 hr time
+        if (t === "Now") {
+            const now = new Date();
+            return now.getHours();
+        }
+
+        let meridiem = t.slice(-2);
+        let hour = parseInt(t.slice(0, -3));
+        if (meridiem === " am") {
+            if (hour === 12) {
+                hour = 0;
+            }
+        } else {
+            if (hour !== 12) {
+                hour += 12;
+            }
+        }
+        return hour;
+    }
     /**
      * Finds the date stamp for a given time.
      * @param {string} t - number of minutes past current time.
@@ -152,7 +172,7 @@ const colorRange = 1.7;
                 priceTag.src = "dollar-sign.png";
                 hourBox.appendChild(priceTag);
             } 
-            hourBox.addEventListener('click',  function() {makeReminderVisible(circle.textContent, parseInt((i+now.getHours())/24), timeText.textContent);});
+            hourBox.addEventListener('click',  function() {makeReminderVisible(circle.textContent, parseInt(((i+now.getHours())/24+now.getDay())%7), timeText.textContent);});
         }
         highlightCorrectDay(hourIndex)        
     }
@@ -332,7 +352,7 @@ function makeDayOptions(series){
 
             dayOptions.appendChild(dayBox);
         }
-    }
+    } 
 function makeReminderVisible(energy, day, time){
     const reminderContainer = document.getElementById("reminder-container");
     const reminderCircle = document.getElementById("reminder-circle");
@@ -342,7 +362,7 @@ function makeReminderVisible(energy, day, time){
     console.log(reminderCircle.textContent + "Day: " + day);
     reminderCircle.textContent = energy;
     reminderCircle.style.backgroundColor = "hsl(" + energy *parseInt(colorRange) + ", 90%, 50%)";
-    reminderDay.textContent = daysOfWeek[day];
+    reminderDay.textContent = day == new Date().getDay() ? "Today" : daysOfWeek[day];
     reminderContainer.style.display = "flex";
 }
 
@@ -377,9 +397,34 @@ function initializeReminder(){
             const reminderContainer = document.getElementById("reminder-container");
             reminderContainer.style.display = "none";
             subscribeToPush();
+            const hours = find24hr(document.getElementById("reminder-hour").textContent);
+            const day = document.getElementById("reminder-day").textContent;
+            let notifyDate = new Date();
+            const now = new Date();
+            const targetDayIndex = day == "Today" ? daysOfWeek.indexOf(now.getDay()) : daysOfWeek.indexOf(day);
+            const currentDayIndex = daysOfWeek.indexOf(now.getDay());
+            const daysUntilTarget = (targetDayIndex - currentDayIndex + 7) % 7;
+            console.log("Days until target: " + daysUntilTarget);
+            notifyDate.setHours(hours,0,0,0);
+            notifyDate.setDate(now.getDate() + daysUntilTarget);
+            notifyUser(localStorage.getItem("userId"), document.getElementById("reminder-button").textContent + " Reminder", "Run it or just quit", notifyDate);
         }
     });
 }
+
+const threats = ["Climate change could be irreversible by 2030",
+    "Greenhouse gas levels are at an all-time high",
+    "More than 1 million species face extinction",
+    "Climate change is creating a refugee crisis",
+    "The last 7 years have been the warmest on record",
+    "Atmospheric Carbon Dioxide levels reached a record high in 2024, exceeding 421 parts per million—over 50% higher than pre-industrial levels.",
+    "Since 1880, the global average surface temperature has increased by 2.12 degrees Fahrenheit.",
+    "At least 3.6 billion people live in areas that are highly vulnerable to the impacts of climate change, including extreme weather and sea-level rise.",
+    "Greenland and Antarctica have lost an average of 427 billion tons of ice per year.",
+    "Glaciers worldwide have lost 890 cubic miles of ice since 1961.",
+    "Oceans have absorbed about 90% of the excess heat from global warming, leading to rising ocean temperatures.",
+    "If warming exceeds 2°C, 99% of coral reefs will be lost."    
+];
 async function registerSW() {
     if (!("serviceWorker" in navigator)) return;
 
@@ -412,17 +457,28 @@ async function subscribeToPush() {
         })
     });
     console.log("Subscribed:", subscription);
-    await notifyUser(localStorage.getItem("userId"), "PurrWatt Reminder Set!", "We'll notify you when it's a good time to use your appliance.");
 }
-async function notifyUser(userId, title, body) {
-    await fetch("https://caiso-proxy-repo.onrender.com/notify", {
+async function notifyUser(userId, title, body, time) {
+    // await fetch("https://caiso-proxy-repo.onrender.com/notify", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //         userId,
+    //         title,
+    //         body
+    //     })
+    // }
+    // );
+    await fetch("https://caiso-proxy-repo.onrender.com/notify-time", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             userId,
             title,
-            body
+            body,
+            time
         })
     }
     );
+    console.log("Notification scheduled: " + time.toString());
 }
