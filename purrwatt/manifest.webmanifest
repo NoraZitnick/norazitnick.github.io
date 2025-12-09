@@ -9,17 +9,17 @@
   "display": "standalone", 
   "icons": [
       {
-        "src": "/purrwatt/icon-images/icon_192x192",
+        "src": "icon-images/icon_192x192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
     {
-        "src": "/purrwatt/icon-images/icon_512x512",
+        "src": "icon-images/icon_512x512.png",
         "type": "image/png",
         "sizes": "512x512"
       },
           {
-        "src": "/purrwatt/icon-images/icon_1024x1024",
+        "src": "icon-images/icon_1024x1024.png",
         "type": "image/png",
         "sizes": "1024x1024"
       }

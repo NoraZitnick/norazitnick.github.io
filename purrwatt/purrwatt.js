@@ -5,7 +5,19 @@ function showInfo(idName) {
 
 
 
-
+const threats = ["Climate change could be irreversible by 2030",
+    "Greenhouse gas levels are at an all-time high",
+    "More than 1 million species face extinction",
+    "Climate change is creating a refugee crisis",
+    "The last 7 years have been the warmest on record",
+    "Atmospheric Carbon Dioxide levels reached a record high in 2024, exceeding 421 parts per million—over 50% higher than pre-industrial levels.",
+    "Since 1880, the global average surface temperature has increased by 2.12 degrees Fahrenheit.",
+    "At least 3.6 billion people live in areas that are highly vulnerable to the impacts of climate change, including extreme weather and sea-level rise.",
+    "Greenland and Antarctica have lost an average of 427 billion tons of ice per year.",
+    "Glaciers worldwide have lost 890 cubic miles of ice since 1961.",
+    "Oceans have absorbed about 90% of the excess heat from global warming, leading to rising ocean temperatures.",
+    "If warming exceeds 2°C, 99% of coral reefs will be lost."    
+];
 
 var flowers = [];
 
@@ -414,24 +426,17 @@ function initializeReminder(){
             console.log("Days until target: " + daysUntilTarget);
             notifyDate.setHours(hours,0,0,0);
             notifyDate.setDate(now.getDate() + daysUntilTarget);
-            notifyUser(localStorage.getItem("userId"), document.getElementById("reminder-button").textContent + " Reminder", "Run it or just quit", notifyDate);
+            const message = threats[Math.floor(Math.random() * threats.length)];
+            console.log(message);
+            notifyUser(localStorage.getItem("userId"),
+                document.getElementById("reminder-button").textContent + " Reminder", 
+                message, 
+                notifyDate);
         }
     });
 }
 
-const threats = ["Climate change could be irreversible by 2030",
-    "Greenhouse gas levels are at an all-time high",
-    "More than 1 million species face extinction",
-    "Climate change is creating a refugee crisis",
-    "The last 7 years have been the warmest on record",
-    "Atmospheric Carbon Dioxide levels reached a record high in 2024, exceeding 421 parts per million—over 50% higher than pre-industrial levels.",
-    "Since 1880, the global average surface temperature has increased by 2.12 degrees Fahrenheit.",
-    "At least 3.6 billion people live in areas that are highly vulnerable to the impacts of climate change, including extreme weather and sea-level rise.",
-    "Greenland and Antarctica have lost an average of 427 billion tons of ice per year.",
-    "Glaciers worldwide have lost 890 cubic miles of ice since 1961.",
-    "Oceans have absorbed about 90% of the excess heat from global warming, leading to rising ocean temperatures.",
-    "If warming exceeds 2°C, 99% of coral reefs will be lost."    
-];
+
 async function registerSW() {
     if (!("serviceWorker" in navigator)) return;
 
