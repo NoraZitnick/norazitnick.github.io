@@ -3,6 +3,7 @@
     <!-- <meta http-equiv="Access-Control-Allow-Origin" content="*" /> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="/purrwatt/manifest.webmanifest">
     <link rel="stylesheet" href="purwatt.css">
     
     <!-- apple homepage icon -->
@@ -72,6 +73,14 @@
     </div>
     </div>
     </div> 
+  <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register (
+          '/purrwatt/service-worker.js',
+          {scope: '/purrwatt/'}
+        )
+      }
+  </script>
 <script src="purrwatt.js"></scriptsrc></script>
 
 </body>

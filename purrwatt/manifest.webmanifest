@@ -1,0 +1,27 @@
+{
+  "name": "Purrwatt",
+  "short_name": "PW",
+  "description": "Track and manage your energy usage with Purrwatt!",
+  "scope": "/purrwatt/",
+  "start_url": "/purrwatt/purrwatt-index.html",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "display": "standalone", 
+  "icons": [
+      {
+        "src": "/purrwatt/icon-images/icon_192x192",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+    {
+        "src": "/purrwatt/icon-images/icon_512x512",
+        "type": "image/png",
+        "sizes": "512x512"
+      },
+          {
+        "src": "/purrwatt/icon-images/icon_1024x1024",
+        "type": "image/png",
+        "sizes": "1024x1024"
+      }
+  ]
+}
